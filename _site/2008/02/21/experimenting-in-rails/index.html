@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Experimenting in Rails &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Experimenting in Rails</h2>
+
+<div class="main">
+  <p>Lately, have had some late night hacking to experiment with some Ruby/Rails apps.  For a long time, I'd been neglecting Rails and had intentions of learning it, though always put it off.  Though I'd been reading some books on it, but I tend to learn new languages by doing rather than reading.</p>
+
+
+<p>Recently, had started using <a href="http://plasq.com/skitch">Skitch</a> to take screenshots in OS X, but was disappointed with their <a href="http://skitch.com/">Skitch.com</a> service for posting photos online.  It was ok, but didn't have configurable thumbnail sizes for embedding and always included a tagline below the image.</p>
+
+
+<p>It offered posting photos online via WebDAV, so I thought, what if I wrote a quick Rails app to handle the WebDAV PUT request and then I could have my own page to go along with it with customizable thumbnail settings, various pre-formed content, and no taglines.  Normally, Skitch will post it then copy the image location to the clipboard (it knows the location, won't let you return the location unfortunately), so I can paste that URL into a browser then add on &quot;.view&quot; to go to a custom page with options for the image:</p>
+
+
+<p align="center"><a rel="lightbox" title="skitchdav-20080214-003225.jpg" href="/files/media/image/skitchdav/skitchdav-20080214-003225.jpg">   <img alt="skitchdav-20080214-003225.jpg" width="300" height="244" border="0" src="/files/media/image/skitchdav/thumb.skitchdav-20080214-003225.jpg" /> </a></p>
+
+
+<p>Right now, have it just have a regular thumbnail/link, one for thumbnail/larger in a lightbox pop-up, and a thumbnail/link in BBCode.  I have global thumbnail defaults, and individual image overrides.  If the thumbnail would be bigger than the original, then it doesn't scale it and instead just does an IMG tag for the image itself.  Also can upload images over the web interface, as opposed to always having to use Skitch.  And it has authentication.</p>
+
+
+<p>Nothing really super fancy and would likely take a Rails expert a few hours to whip up, though it was a good amount of experimenting for me over the course of a few nights, slowly adding this/that, getting it working on OS X, then Windows, then OS X again, and then on Linux.  There are some things to be cautious of when changing environments, especially with the uploaded files (in dev, it was a UploadedTempFile, on Linux it was UploadedStringIO, on Windows I could remove it when done, on OS X/Linux I couldn't).</p>
+
+
+<p>I'm not about to pull a <a href="http://afreshcup.com/">Mike Gunderloy</a> and <a href="http://afreshcup.com/wp-trackback.php?p=749">jump ship</a> from .NET to Ruby, though I definitely find the &quot;convention over configuration&quot; approach to Rails refreshing.  I think ASP.NET will get a lot better with ASP.NET MVC, and I'm impressed with it from what I've seen so far.  But I think .NET still has a couple of lessons it could learn from Rails, such as ease of deployment, ease configuration and definition of environments, and programmatic database migrations.</p>
+
+
+<p>A big part of it has to do with Windows developers aversion of the command line.  When I used to run Linux full time, I'd always have 2-3 console sessions open, especially when coding.  When developing on Windows?  Most likely none, unless I need to do a ping or something.  Any console window is probably just a quick test console application that is running in debug mode.  The command line has so much more power than the GUI, as the command line can be nicely organized while the GUI gets cluttered with add-ons, widgets, to-dads, and task bar icons.</p>
+
+
+<p>Perhaps I should do a short series on some of my thoughts on how .NET could adopt some of the things that make Rails so easy.</p>
+
+
+
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Thursday, February 21, 2008</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2008/02/20/moved-to-directv/" title="Previous post: Moved to DirecTV">Moved to DirecTV</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2008/02/28/nick-learns-to-talk/" title="Next post: Nick learns to "talk"">Nick learns to "talk"</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

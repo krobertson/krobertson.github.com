@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Paying attention to dynamic dependencies &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Paying attention to dynamic dependencies</h2>
+
+<div class="main">
+  <p>I recently stumbled upon an interesting issue that is so easily overlooked when coding applications that run in the background.  On boot up, Windows starts up all the registered services one by one, taking into account which ones depends on the others.  In this way, any services it is dependent upon will be ensured to be running before it is started.  With Mail Gateway, all the configurations we've seen have had MSMQ running on the same machine, and there was an issue where the server could start Mail Gateway before MSMQ is running, causing it to not start up properly.  So, we made a change so that Mail Gateway had a dependency upon MSMQ.</p>
+
+
+
+
+<p>Then, we recently discovered an issue were the News Gateway add-on failed to start on boot up.  The problem this time was that the SQL Server it uses is on the same box, and on start up, the News Gateway gets a list of available sites and their settings.  It is quite common for SQL Server to be on the same machine, and for an application to need to connect to it on start up.  The problem is that the machine could start the application before SQL Server has been loaded.  So, we could just have the installer create a dependency on SQL Server, however in CS, we don't require the database to be on the same machine.</p>
+
+
+
+
+<p>So the problem is, we would need to create the dependency on installation, but at install time, we don't know where the database is going to be.  We could ask the user, and then create the dependency if needed, but they could change their mind, and uninstall SQL Server, which could leave News Gateway in limbo.  The same issue is prevalent with Mail Gateway and its dependency on MSMQ.  With most configurations, it is on the same box, but we don't actual require that.  Our main reason for choosing to use MSMQ was to enable a more diverse and distributed configuration.</p>
+
+
+
+
+<p>Another issue is that background applications don't have any interface with the user.  So when it fails to start up, sure it writes a message to the log, but there isn't anyone continuously checking the logs.  So it will go unnoticed until someone says "hey, I haven't gotten any emails for a few days" or "I can't connect over NNTP".  Then you are kind of caught with your pants down.</p>
+
+
+
+
+<p>The solution is not to use a dependency, but to change the programs so that if they fail to connect on startup, they will continue on (instead of exiting and aborting), and to continue to retry until it is able to connect.  So, the main point of my post, is to be aware of what your application is using that is beyond your control, and to code it so you can control them... in a way.</p>
+
+
+
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Sunday, April 09, 2006</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2006/04/04/wall-art/" title="Previous post: Wall Art">Wall Art</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2006/04/10/quarter-of-a-century/" title="Next post: Quarter of a century">Quarter of a century</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

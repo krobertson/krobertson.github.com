@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Value of site monitoring &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Value of site monitoring</h2>
+
+<div class="main">
+  <p>As it has been <a href="http://qgyen.net/archive/2007/10/17/datacenter-fun.aspx">previously establish</a>, I handle a couple of servers and a small network in a Sacramento datacenter.&nbsp; I had set up all kinds of internal monitoring on bandwidth, server health, etc.&nbsp; But one thing I never did before was to setup external monitoring.&nbsp; Site monitoring can be invaluable to help manage your site and the services you use.</p>
+
+
+<p> <p>The reality, things do go down from time to time.&nbsp; Most of the time it is for maintenance purposes (or at least, it <em>should</em> be).&nbsp; However sometimes, things do go wrong.&nbsp; Having quality site monitoring gives you instant notification (if it is something you can handle), history of information on outages, and can even help you keep a provider tied to their Service Level Agreement.</p> <p>I recently signed up for monitoring with <a href="http://www.pingdom.com/">Pingdom</a>, which offers attractive pricing for multi-site monitoring (since one location is never enough), and also monitoring with checks at 1 minute.&nbsp; These are two important points.</p> <p>First, most others will offer ever 5 minutes standard, or you can pay extra for 2 minutes.&nbsp; 1 minute resolution gives you the absolute fastest notification, and can pickup the smallest outages.&nbsp; With 5 minutes, you could almost reboot a server in that time.&nbsp; That is a definite outage, but it could completely miss it.</p> <p>The second important thing is multi-site monitoring.&nbsp; This is a necessity.&nbsp; Over the weekend, my server had its first actual network issue.&nbsp; It was outside of my control, but basically, I get access from two providers: Qwest and Verizon Business.&nbsp; Verizon was having some network issues in the Sacramento area that was causing traffic coming in through them to be dropped, but traffic from Qwest was fine.&nbsp; This caused a sort of brown out.&nbsp; Server was accessible depending on which route traffic was coming in from.&nbsp; With site monitoring that only checked from a single location, it could show the site as operating just fine.&nbsp; However Pingdom offers like 7 worldwide locations they check from.&nbsp; This allows for high certainty of its accuracy.</p> <p>On top of that, you can purchase additional service checks for only $0.50/month, so I have all my main services monitored, and even several of my upstream provider&#39;s services monitored, so in the event this happens again, I&#39;ll clearly know if it is within my network, upstream, and narrow it down right away.</p> <p>May sound like a commercial, though Pingdom really is quite cool.&nbsp; They even give response times on all checks for some basic historical performance data.</p></p>
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Monday, November 12, 2007</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2007/11/05/most-unusual-side-effects/" title="Previous post: Most unusual side effects">Most unusual side effects</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2007/11/16/nick-bits-for-november-16th/" title="Next post: Nick  Bits for November 16th">Nick  Bits for November 16th</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Implementing Getting Things Done with Outlook and ClearContext &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Implementing Getting Things Done with Outlook and ClearContext</h2>
+
+<div class="main">
+  <p>I've been reading through (Getting Things Done)[http://www.davidco.com/] and I have been anxious to start collecting all of my "stuff".  One of the biggest problems I've found is that initial purge of everything you could possibly have to take action on.  It is hard to force yourself to thing of everything that inital time.  The second problem is coming up with a complete, reliable "trusted system" at the beginning.  The trusted system is supposed to hold all my stuff, and I only want to have to input/set it all up once, so I don't want to change my mind in a week and use something else.</p>
+
+
+
+
+<p>I started by checking out (MyLifeOrganized)[http://www.mylifeorganized.net/] and liked it at first.  Its key benefit is its hierarchial task structure.  After using it for a short while, I quickly noticed a number of problem points though:</p>
+
+
+
+
+<ul>
+<li><p>I don't really care for its views.  Its Projects and Views panes are very nice, but would be nice to have them combined some way.  And its ToDo tab has no hierarchy to it.  Using the Places as Context seemed kind of ad hoc and not nicely exposed in the main view.</p></li>
+<li><p>I want to be able to view the same information on my XV6700 as well, and they have a PPC version, but not a very attractive solution.  Mentions some issues with WM5, needing a separate license, export/import is laborious, and currently only a beta with nothing solid on a final version.</p></li>
+<li><p>It supports syncing with Outlook, but you completely lose the nice hierarchy when syncing.  I have a project called "Finish NNTP Server v2.1", with some subtasks, and then in outlook, the project and subtasks are all on the same level since Outlook has no hierarchy.  MLO could have done some fancy work with categories/views or something to at least try and maintain the hierarchy.</p></li>
+<li><p>A lot of my tasks come as a result of emails.  Someone emails me "take a look at this", so I set up a task to "take a look at this".  This is made quite nicely through the use of ClearContext v2.x, but then I am creating tasks in two buckets.  I'd have to create the task with ClearContext, sync it to MLO, then put it with a project and all.  Kind of laborious.  MLO itself doesn't seem to have a nice way to link/reference the emails directly.  So kind of feel like I am losing something.  Want the task to nicely reference the email and utilize everything ClearContext adds, but want a more fully featured task environment than what Outlook has.  Well, can't have everything.</p></li>
+</ul>
+
+
+
+
+<p>So it is looking like MLO won't fill my needs.  I already have a vested interest in ClearContext (I bought it and have been already using it) and do not want to give it up for anything.  So have been coming up with a way to handle everything around it.</p>
+
+
+
+
+<p>In future versions of ClearContext, it should become quite a bit easier as one of the highly request features is extending the properties directly to the Task object, so that can be a part of the Task View.  Once I have that, I will be in heaven.</p>
+
+
+
+
+<p>In the meantime, I have come up with my own way of organizing things.  I wanted to use what was already there in Outlook and to fit the GTD concepts around it.  Things don't fully line up, but for my own personal needs and uses, I could easily bend them to fit within Outlook</p>
+
+
+
+
+<p>In GTD, a part of it involves breaking tasks up by context, priority, time available, and energy available.  The context is basically things like "at the office", "at home", "on the road".  Part of the goal of GTD is to capture everything in your life, from gardening, groceries, projects, coding, conference calls, anything and everything.  So you can have different contexts, like doing gardening when at home, and conference calls while in the office, and coding while you have a computer.  For me, my context is almost always the same.  I work at home, so my office is my home.  I can simply create a category/project for "Errand" stype actions, so I can essentially get rid of contexts.</p>
+
+
+
+
+<p>Now, I basically have two key criteria to group by... priority and project (errands being a project).  Priority is commonly things like Urgent, Day, Week, Month, Year, and Someday/Maybe (I am skewing the filing system slightly, but only to get it to fit in with the software).  Unfortunately, Outlook has only 3 levels of priority.  Things that are like Urgent will be marked as High priority, Day will be Normal with a due date or be a scheduled item on the calendar, Week/Month will be Normal, and Year/Someday will be Low priority.  I then set the category on all of my tasks to be the project, such as "Community Server", "Mail Gateway", all the way down to "Errands" and "Personal".  In cases where I need things like "@Waiting For", I just set the status to be "Waiting on someone else".</p>
+
+
+
+
+<p>I then set up a customized tasks view with the fields Complete (checkbox), Priority (an icon), Attachment (an icon), Subject, Categories, Status, Total Work, % Complete, and Due Date.  I then set it to group by Priority descending and Categories ascending.  Finally, it sorts by due date descenting, % complete descending, and total work ascending.</p>
+
+
+
+
+<p>Overall, this should suit me quite well as an introduction system to GTD.  In time, future versions of ClearContext should enable me to better expose the custom fields so I can do a more clearer Category/Topic grouping to link up with GTD's concept of Action/Project.  Overall though, I am quite impressed with ClearContext v2.0 now that I'm using its tasks features.  Next would be to look into using ActiveWords.</p>
+
+
+
+
+<ul>
+<li>ClearContext has an ActionView to show Categories/Topic type grouping, but I am not very font of it and prefer the standard task view.  Additionally, I don't have ClearContext on my laptop because of a known issue of using ClearContext on two machines when Outlook is open on both at the same time (as I frequently do, and am doing right now).  So I can't use the ActionView from my laptop.</li>
+</ul>
+
+
+
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Friday, April 14, 2006</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2006/04/12/new-books/" title="Previous post: New books!">New books!</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2006/04/14/too-much-spam/" title="Next post: Too much spam!">Too much spam!</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

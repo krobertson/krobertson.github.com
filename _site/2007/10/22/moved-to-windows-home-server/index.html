@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Moved to Windows Home Server &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Moved to Windows Home Server</h2>
+
+<div class="main">
+  <p>It was <a href="http://qgyen.net/archive/2006/11/20/Should-have-got-a-NAS-device-a-long-time-ago.aspx">not even a year ago</a> that I setup my home NAS server complete with RAID, however now I am abandoning it.&nbsp; Previously, I had <a href="http://qgyen.net/archive/2007/03/30/windows-home-server-s-idea-of-redundancy.aspx">disliked Windows Home Server&#39;s idea of redundancy</a>, however some recent events with my not-as-trust <a href="http://www.infrant.com/products/products_details.php?name=ReadyNAS%20NV">Infrant ReadyNAS NV</a> have changed my opinion.</p>
+
+
+<p> <p>About two months ago, I had a little issue with my NAS storage box.&nbsp; I was out over town over the weekend and when I came home, I found that the unit was off.&nbsp; No power had gone out, since no clocks were blinking, but the box was off, and when I pushed the power button, it wouldn&#39;t turn on.&nbsp; Took it out from behind my monitors, blew out the dust, and then it worked.&nbsp; Was confused why that fixed it, but hey, it was working again.&nbsp; However, over the next week, I started smelling something occasionally in my office that smelled like burning potatoes.&nbsp; It smelled like it was coming from my ceiling fan (though turns out it was the ceiling fan blowing down the bad smell it pulled up from the NAS area)... after a week of having the NAS back up, it was broke again, and this time for good.</p> <p>It turned out it was just a blown power supply, and it was somewhat common the model I had.&nbsp; I ended up fixing it by popping out its proprietary PSU and replacing it with a normal big-ass ATX PSU, since I found all you needed to do for them to be compatible was snip a little wire it didn&#39;t use (used a cheap spare PSU I had laying around).&nbsp; This brought up several problems with this type of box though.</p> <p>First, it is entirely proprietary.&nbsp; Custom power supply, custom hardware, custom build of some Linux distribution, integrated RAID controller... nothing is end-user swappable.&nbsp; Compare that with a home-PC based storage system.&nbsp; Dead PSU?&nbsp; Ok, run to Fry&#39;s, by a new one, done.&nbsp; Dead motherboard?&nbsp; Get another.&nbsp; Dead CPU?&nbsp; Get another.&nbsp; Some may be bigger headaches to get up and going, but for the most part, no need to RMA the entire unit.</p> <p>While it supports RAID for hard drive redundancy, everything else about the unit is a closed box.&nbsp; When the unit was broken, there was <em>no way</em> for me to access my data.&nbsp; I couldn&#39;t plug the drives into another system.&nbsp; I couldn&#39;t pull the controller out and access the array on another system.&nbsp; Nothing.&nbsp; Your data gets locked to that device.&nbsp; To get access to your data, you have to get the device running again.&nbsp; This sucks when you store all your important data on there.</p> <p>All this made me take another look at <a href="http://www.microsoft.com/windows/products/winfamily/windowshomeserver/default.mspx">Windows Home Server</a>.&nbsp; Its idea of redundant storage is to just keep two copies of the file.&nbsp; Have a hard drive die?&nbsp; No problem, it can rebalance its storage and ensure another copy of that data is somewhere.&nbsp; Want to add more drives?&nbsp; No problem, plug them in (can&#39;t exactly do that once you have all 4 drives in on the NAS solution).&nbsp; With its &quot;two copies&quot; idea, it is basically RAID1, but without the dependence on a RAID controller.&nbsp; Say you have a total system failure with WHS and need access to some of your data.&nbsp; All you have to do is plug that drive into another system.&nbsp; It is just a regular NTFS partition with some special directory structure.&nbsp; Just go to the drive, Shares, Photos, and boom, there is the Photos share.&nbsp; Additionally, even though you will get 1/2 your drive capacity with the &quot;two copies&quot; method, you have to face one ever growing reality... storage is cheap!&nbsp; Run out of space?&nbsp; It is pretty easy and rather inexpensive to add another drive.&nbsp; You can get a 500gb hard drive for ~$100 nowadays... so for $200, you have 500gb of redundant storage with WHS.&nbsp; $0.40 a gigabyte?&nbsp; Not too shabby.</p> <p>On top of that, I can now backup all the PCs in my house nice and easily (as opposed to buying several copies of Acronis TrueImage).</p> <p>What&#39;s next?&nbsp; Maybe when I find some free time, I&#39;ll write up a little add-in to WHS to support remote off-site backups with rsync or some other continuous backup software.</p></p>
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Monday, October 22, 2007</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2007/10/18/microsoft-money-online-service-expiration/" title="Previous post: Microsoft Money online service expiration?">Microsoft Money online service expiration?</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2007/10/28/disappointing-blackberry/" title="Next post: Disappointing Blackberry">Disappointing Blackberry</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

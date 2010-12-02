@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>How to properly access ASP.NET profile defaults without a profile &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>How to properly access ASP.NET profile defaults without a profile</h2>
+
+<div class="main">
+  <p>Recently, we stumbled upon this indiscrete bug in Community Server with its handling of some things in a user's profile.  While debugging, couldn't find much about it on Google, so I thought I'd write up a quick explanation so it might help spare some poor sole from losing hair over it.</p>
+
+
+<p>In summary of it, there were some edge cases where a user record could exist, but they didn't have a profile record yet (created externally, or for me, created via REST API with none of the profile options set).  When a profile record isn't found, then CS just reads the default values as defined in your web.config.</p>
+
+
+<p>The documentation on how to do this is quite slim, so in our profile handling, we basically had this method:</p>
+
+
+<pre class="brush: c-sharp;">
+public override object GetPropertyValue(string propertyKey)
+{
+  return ProfileBase.Properties[propertyKey].DefaultValue;
+}</pre>
+
+
+<p><a href="http://msdn.microsoft.com/en-us/library/system.configuration.settingsproperty.defaultvalue.aspx">DefaultValue</a> returns an object, and as the documentation states:</p>
+
+
+<p>&nbsp;</p>
+
+
+<p>&nbsp;</p>
+
+
+<blockquote>An object containing the default value of the SettingsProperty object.</blockquote>
+
+
+<p>&nbsp;</p>
+
+
+<p>So when you had a profile entry as so:</p>
+
+
+<pre class="brush: xml;">&lt;properties&gt;
+  ...
+  &lt;add name = &quot;timezone&quot; type = &quot;System.Double&quot; defaultValue=&quot;0&quot; /&gt;
+  ...
+&lt;/properties&gt;</pre>
+
+
+<p>You might assume that when you get the timezone default value, you get a  double back.  Right?  Wrong!  Even though DefaultValue returns an object, the actual return value is <b>always a string</b>.  The documentation isn't misleading, it is just rather bare.  In our case, we expected it to be a double and would get an invalid casting exception (the bug in CS wasn't for the timezone setting, it was a different one).</p>
+
+
+<p>So how do you properly read the default value and get the expected type?  Documentation on this is bare as well, but after sifting through Reflector some, found that other places DefaultValue is accessed also make use of a SettingsPropertyValue class.  Aha!  The SettingsPropertyValue class is used to perform the serialization on the default value.  So for the above, you could quickly fix it like so:</p>
+
+
+<pre class="brush: c-sharp;">public override object GetPropertyValue(string propertyKey)
+{
+  return new SettingsPropertyValue(ProfileBase.Properties[propertyKey]).PropertyValue;
+}</pre>
+
+
+<p>Wha-la!  Magic!  Also to help illustrate it better, can throw this snippet into a .aspx page and run it in your browser.  It will spit out a quick list of all your profile properties and their values/type using both methods.</p>
+
+
+<pre class="brush: xml;">&lt;%@ Page Language=&quot;C#&quot; AutoEventWireup=&quot;true&quot; %&gt;
+&lt;script runat=&quot;server&quot;&gt;
+    public void Page_Load(object sender, EventArgs e)
+    {
+        Response.Write(&quot;&lt;table border='1' cellpadding='3'&gt;&lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Type&lt;/th&gt;&lt;th&gt;Default Value&lt;/th&gt;&lt;th&gt;Default Value Type&lt;/th&gt;&lt;th&gt;SettingsPropertyValue&lt;/th&gt;&lt;th&gt;SettingsPropertyValue Type&lt;/tr&gt;&quot;);
+        foreach (SettingsProperty p in System.Web.Profile.ProfileBase.Properties)
+        {
+            SettingsPropertyValue spv = new SettingsPropertyValue(p);
+            Response.Write(                 string.Format(&quot;&lt;tr&gt;&lt;td&gt;{0}&lt;/td&gt;&lt;td&gt;{1}&lt;/td&gt;&lt;td&gt;{2}&lt;/td&gt;&lt;td&gt;{3}&lt;/td&gt;&lt;td&gt;{4}&lt;/td&gt;&lt;td&gt;{5}&lt;/td&gt;&lt;/tr&gt;&quot;, p.Name, p.PropertyType.FullName,                           p.DefaultValue, p.DefaultValue.GetType().FullName,                          spv.PropertyValue, spv.PropertyValue.GetType().FullName));
+        }
+        Response.Write(&quot;&lt;/table&gt;&quot;);
+    }
+&lt;/script&gt;</pre>
+
+
+<p>If you encounter something similar, may want to take into account how often you might need to access the value, since in the above, it would de-serialize the value each time.  In CS, we actually changed it to lazy-load them and store the value in a dictionary.  We also cleaned up some of the profile code so it was more streamlined and could handle the event it was a string (or something else, such as converting an int timezone into a double).</p>
+
+
+
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Friday, May 09, 2008</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2008/04/22/history-blog-meme/" title="Previous post: History Blog Meme">History Blog Meme</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2008/05/12/move-to-mac-is-complete/" title="Next post: Move to Mac is complete">Move to Mac is complete</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

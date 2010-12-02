@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Named many-to-many relationships in DataMapper &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Named many-to-many relationships in DataMapper</h2>
+
+<div class="main">
+  <p>When implementing the collaborators feature in <a href="http://trunksapp.com/">Trunks</a>, ran into a bit of a roadblock with how to describe the relationships between the repository and the users.</p>
+
+<p>Trunks is built on <a href="http://merbivore.org/">Merb</a> and <a href="http://datamapper.org/">DataMapper</a>, and the implementation involved two models: a User and a Project.  In Trunks, a repository is a Project because "repository" is a reserved attribute in DataMapper and I was running into issues early on, so I changed it to Project.</p>
+
+<p>A project belongs to a user, and a user has many projects.  A user can also be a collaborator on many projects, and a project can have many collaborators.  So I already had the first relationship which was a simple 1-to-many relationship.  The problem came about with adding collaborators.  In a sense, it is a normal many-to-many, which you can do in DataMapper similar to how you would in ActiveRecord using a "has_many ..., :through =&gt; ..." relationship, but I was creating a relationship between models that had an existing and separate relationship.</p>
+
+<p>I didn't want the user.projects collection to return the projects a user collaborated on, because it was intended to only be the user's own projects.  And similarly, a project only has one owner, not many.</p>
+
+<p>I essentially found I needed a "has many through" with named attributes.  To do this, I had to actually create the proxy class that goes between the user and the project model, rather than let DataMapper create it automatically.  That way, I can control the attribute names on the proxy class so that "users" and "projects" on the two models won't get munged.</p>
+
+<p>The result looked like this:</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="lineno"> 1</span> <span class="k">class</span> <span class="nc">User</span>
+<span class="lineno"> 2</span>   <span class="kp">include</span> <span class="no">DataMapper</span><span class="o">::</span><span class="no">Resource</span>
+<span class="lineno"> 3</span>   <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="lineno"> 4</span>   <span class="n">has</span> <span class="n">n</span><span class="p">,</span> <span class="ss">:collaborations</span>
+<span class="lineno"> 5</span>   <span class="n">has</span> <span class="n">n</span><span class="p">,</span> <span class="ss">:collab_projects</span><span class="p">,</span> <span class="ss">:model</span> <span class="o">=&gt;</span> <span class="s1">&#39;Project&#39;</span><span class="p">,</span> <span class="ss">:child_key</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">,</span> <span class="ss">:parent_key</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span><span class="p">,</span> <span class="ss">:through</span> <span class="o">=&gt;</span> <span class="ss">:collaborations</span>
+<span class="lineno"> 6</span> <span class="k">end</span>
+<span class="lineno"> 7</span> 
+<span class="lineno"> 8</span> <span class="k">class</span> <span class="nc">Project</span>
+<span class="lineno"> 9</span>   <span class="kp">include</span> <span class="no">DataMapper</span><span class="o">::</span><span class="no">Resource</span>
+<span class="lineno">10</span>   <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="lineno">11</span>   <span class="n">has</span> <span class="n">n</span><span class="p">,</span> <span class="ss">:collaborations</span>
+<span class="lineno">12</span>   <span class="n">has</span> <span class="n">n</span><span class="p">,</span> <span class="ss">:collab_users</span><span class="p">,</span> <span class="ss">:model</span> <span class="o">=&gt;</span> <span class="s1">&#39;User&#39;</span><span class="p">,</span> <span class="ss">:child_key</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">,</span> <span class="ss">:parent_key</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:project_id</span><span class="o">]</span><span class="p">,</span> <span class="ss">:through</span> <span class="o">=&gt;</span> <span class="ss">:collaborations</span>
+<span class="lineno">13</span> <span class="k">end</span>
+<span class="lineno">14</span> 
+<span class="lineno">15</span> <span class="k">class</span> <span class="nc">Collaboration</span>
+<span class="lineno">16</span>   <span class="kp">include</span> <span class="no">DataMapper</span><span class="o">::</span><span class="no">Resource</span>
+<span class="lineno">17</span> 
+<span class="lineno">18</span>   <span class="n">property</span> <span class="ss">:id</span><span class="p">,</span> <span class="no">Serial</span>
+<span class="lineno">19</span> 
+<span class="lineno">20</span>   <span class="n">belongs_to</span> <span class="ss">:collab_user</span><span class="p">,</span> <span class="ss">:model</span> <span class="o">=&gt;</span> <span class="s1">&#39;User&#39;</span><span class="p">,</span> <span class="ss">:child_key</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span>
+<span class="lineno">21</span>   <span class="n">belongs_to</span> <span class="ss">:collab_project</span><span class="p">,</span> <span class="ss">:model</span> <span class="o">=&gt;</span> <span class="s1">&#39;Project&#39;</span><span class="p">,</span> <span class="ss">:child_key</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:project_id</span><span class="o">]</span>
+<span class="lineno">22</span> <span class="k">end</span>
+</code></pre>
+</div>
+
+
+<p>Having a "collab_users" on the Collaboration class allowed me to have the project model to get an attribute name "collab_users" instead of trying to use "users".  And on user, I could have "collab_projects" instead of mixing things up with the existing "projects" attribute.</p>
+
+<p>When creating the relationships though, I had to be careful to spell out the actual parent and child fields rather than let them be automatic, otherwise it'll run into issues where it'll try to create 'collab_user_id' and 'collab_project_id' and inserts will fail because those columns aren't being set.</p>
+
+<p>Take the relationship definition on the user model:</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">has</span> <span class="n">n</span><span class="p">,</span> <span class="ss">:collab_projects</span><span class="p">,</span> <span class="ss">:model</span> <span class="o">=&gt;</span> <span class="s1">&#39;Project&#39;</span><span class="p">,</span> <span class="ss">:child_key</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">,</span> <span class="ss">:parent_key</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span><span class="p">,</span> <span class="ss">:through</span> <span class="o">=&gt;</span> <span class="ss">:collaborations</span>
+</code></pre>
+</div>
+
+
+<p>I am essentially saying create an attribute named 'collab_projects' through the 'collaborations' relationship.  'collab_projects' will be of type Project.  The child key on Collaboration is 'user_id' and the primary key on User is 'id'.  Here, the fields I specify are betwen User and Collaboration, not on Project.</p>
+
+<p>Then on Collaboration, I have:</p>
+
+<div class="highlight"><pre><code class="ruby"><span class="n">belongs_to</span> <span class="ss">:collab_user</span><span class="p">,</span> <span class="ss">:model</span> <span class="o">=&gt;</span> <span class="s1">&#39;User&#39;</span><span class="p">,</span> <span class="ss">:child_key</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:user_id</span><span class="o">]</span>
+</code></pre>
+</div>
+
+
+<p>Here I tell it that the attribute on Collaboration will be collab_user, but the model it is linking to is User.  Basically saying I belong to user, but don't create an attribute named 'user'.  I set the child key, which is the column on Collaboration, to be 'user_id'.  I want to do that else it will try to create it as 'collab_user_id'.</p>
+
+<p>Confused enough?  All boils down to having two separate relationships between two models and having control over what the attributes are named.  After all this, I end up with these calls:</p>
+
+<div class="highlight"><pre><code class="ruby">  <span class="n">user</span><span class="o">.</span><span class="n">projects</span>        <span class="c1"># the user&#39;s own projects</span>
+  <span class="n">user</span><span class="o">.</span><span class="n">collab_projects</span> <span class="c1"># the projects the user is a collaborator on</span>
+
+  <span class="n">project</span><span class="o">.</span><span class="n">user</span>         <span class="c1"># the owner of the project</span>
+  <span class="n">project</span><span class="o">.</span><span class="n">collab_users</span> <span class="c1"># the users who are collaborators on the project</span>
+</code></pre>
+</div>
+
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Wednesday, January 27, 2010</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2010/01/27/migrated-to-wordpress/" title="Previous post: Migrated to Wordpress">Migrated to Wordpress</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2010/02/05/being-professional-and-managing-your-identity/" title="Next post: Being professional and managing your identity">Being professional and managing your identity</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

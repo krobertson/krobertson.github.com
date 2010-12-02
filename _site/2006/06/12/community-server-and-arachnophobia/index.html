@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Community Server and arachnophobia &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Community Server and arachnophobia</h2>
+
+<div class="main">
+  <p>You may wonder what arachnophobia has to do with Community Server, but if you run a CS site and make good use of the photo galleries or file galleries, you may find yourself with arachnophobia as well.  I am not talking about spiders like daddy long legs, but I'm talking about Google, MSN, and Yahoo.</p>
+
+
+
+
+<p>In CS, we try to make a number of things secure and search engine friendly.  We make limited use of the query string, so spiders can crawl your site and gather up a lot of the content, and we do a lot of permissions checks to ensure the right people see the right things (or wrong people don't see the wrong things).  One side effect of this is that a lot of URLs have the .aspx extension so that the ASP.NET runtime will pick up the request.</p>
+
+
+
+
+<p><img src="http://qgyen.net/images/sizes.png" alt="gallery image sizes" align="right">The problem with this comes into play with the Photo Galleries and File Galleries.  So that CS can check the permissions, links to view pictures or download files need the .aspx extension, but also when a spider is crawling your site and sees a link to it, it doesn't know it is an image or a file.  Take, for instance the "Picture Details" page in the Photo Galleries.  Whenever you view a picture, depending on the skin, it could have a section such as this where it links to many different versions of the image.  Regular old links, with .aspx extensions.  A spider sees them as additional content to slurp, so it goes for them.</p>
+
+
+
+
+<p><img src="http://qgyen.net/images/traffic.jpg" alt="bandwidth usage" align="left">Some people had told me that the spiders would see in the headers that it was an image, and then abort.  That isn't necessarily true.  I had noticed this issue a while ago and created a robots.txt file for my site that blocked spiders from images in my photo gallery and files.  I was curious as to how much traffic could be generated from spiders, so I recently decided to remove it and see wht would happen.  On June 1st, I removed my robots.txt file and nothing happened for about a week.  Then, in the image on the left, you can see I started getting more traffic.  Typically, my site only does ~40-60mb per day (yeah, not a lot, but I am not very graphic heavy and most of the traffic is to my RSS feed).  Then on June 7th, I see a spike to 100mb from Google crawling my photo gallery again, and on June 9th I see it shoot to 250mb from MSN crawling my photo gallery.&nbsp; After it shot up on the 9th, I put the file back and traffic has dropped down and is steady once again.<br></p>
+
+
+
+
+<p>In the time since I first created my robots.txt file, I've slimmed down my gallery a lot, so there is less for it to get (thankfully).  For for people with photo rich sites, this can cause a problem.  It will download a number of versions of the same file, the most damaging one being the original image.  If you like the latest high megapixel cameras like me, these images can easily push 2mb each.  Also, one negative aspect in Community Server is if the spiders are mainly checking to see if the content has changed, CS will still return the image, instead of reporting nothing has changed.</p>
+
+
+
+
+<p>So what are some potential solutions to this?  I had thought of adding rel=nofollow attributes to the links to the images, but it doesn't really solve the problem.  First, if the search engines have already been to the site, they'll already have the link, and likely refresh it.  Second, if you link directly to an image from another site (like a forum), the search engines can still get the link into their systems that way.  The only real solution is to use a robots.txt file, but even then, there is an issue.  The problem is that you could get URLs like /photos/ken/images/1234/original.aspx and /photos/john/5678/original.aspx, such as you would get if your site had multiple galleries.  The robots.txt doesn't allow wildcards like /photos/*/images/.</p>
+
+
+
+
+<p>So, for a fairly basic but effective robots.txt file, I'd recommend:</p>
+
+
+
+
+<blockquote>User-agent: *<br>Disallow: images/<br>Disallow: download.aspx<br>Disallow: FileStorage/</blockquote>
+
+
+
+
+<p>The first disallow will block anything in an 'images' directory anywhere on the site.  So I'd recommend not using an images directory for things you want search engines to index.  In my opinion, I don't really need them to have the images for my site's layout.  The second one will block anything using download.aspx, which is what is used to download in the File Galleries.  The final one is where attachments to forums posts are downloaded from.  Note that this was from a CS v2.1 site I was testing with, I am not 100% sure if CS v2.0 was that way as well.</p>
+
+
+
+
+<p>Additionally, you may want to block them from browsing in your Themes folders (like for CSS or whatever they might want to grab), or misc pages like the login page, create user page, etc.  For the more aggressive block, you could use this:</p>
+
+
+
+
+<blockquote>User-agent: *<br>Disallow: images/<br>Disallow: download.aspx<br>Disallow: /FileStorage/<br>Disallow: /Themes/<br>Disallow: /User/<br>Disallow: /Utility/<br>Disallow: /login.aspx</blockquote>
+
+
+
+
+<p><em>Note: This one assumes Community Server is in the root of your site.  Change the paths accordingly if it isn't.</em></p>
+
+
+
+
+<p><strong>I will likely change these recommendations over time based on feedback I get and maybe some engine specific tweaks to make it better.</strong></p>
+
+
+
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Monday, June 12, 2006</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2006/06/11/ado-joins-the-blogging-world/" title="Previous post: Ado joins the blogging world!">Ado joins the blogging world!</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2006/06/12/net-framework-3-0-and-windows-cardspace/" title="Next post: .NET Framework 3.0 and Windows Cardspace">.NET Framework 3.0 and Windows Cardspace</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

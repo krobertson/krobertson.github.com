@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Selenium Server in NAnt &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Selenium Server in NAnt</h2>
+
+<div class="main">
+  <p>When configuring our <a href="http://seleniumhq.org/">Selenium</a> tests to run out build server, one issue I ran into is that there wasn't a lot out there in terms of how to get this set up.  A few people had posted about having done it, but not how they did it.  Overall, it isn't incredibly difficult, but there are a few things that I got hung up on.</p>
+
+<p>The way we run it is we start the selenium server in the background, and then have NUnit tests that run the stories.  We can't start Selenium in the foreground because then we couldn't move on to the NUnit tests, but we also needed to register it as a Windows service on demand.  To do that, we used a utility called <a href="http://iain.cx/src/nssm/">Non-Sucking Service Manager (NSSM)</a>.  It is like <em>srvany</em> from the Windows Resource Kit, but it works on Windows Server 2008 (and there was no publicly available Windows Resource Kit for 2008 I could find).</p>
+
+<p>Here is our setup/teardown <a href="http://nant.sourceforge.net/">NAnt</a> targets:</p>
+
+<div class="highlight"><pre><code class="xml"><span class="lineno"> 1</span> <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;start.selenium&quot;</span><span class="nt">&gt;</span>
+<span class="lineno"> 2</span>   <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&quot;jdk.bin&quot;</span> <span class="na">value=</span><span class="s">&quot;${environment::get-variable(&#39;JDK_BIN&#39;)}&quot;</span> <span class="nt">/&gt;</span>
+<span class="lineno"> 3</span>   <span class="nt">&lt;exec</span> <span class="na">basedir=</span><span class="s">&quot;${common.folder}&quot;</span> <span class="na">program=</span><span class="s">&quot;nssm.exe&quot;</span> <span class="na">commandline=</span><span class="s">&#39;install Selenium &quot;${jdk.bin}\java.exe&quot; &quot;-jar ${source.folder}\libs\selenium-server.jar&quot;&#39;</span> <span class="nt">/&gt;</span>
+<span class="lineno"> 4</span>   <span class="nt">&lt;exec</span> <span class="na">program=</span><span class="s">&quot;net.exe&quot;</span> <span class="na">commandline=</span><span class="s">&quot;start Selenium&quot;</span> <span class="nt">/&gt;</span>
+<span class="lineno"> 5</span> <span class="nt">&lt;/target&gt;</span>
+<span class="lineno"> 6</span> 
+<span class="lineno"> 7</span> <span class="nt">&lt;target</span> <span class="na">name=</span><span class="s">&quot;stop.selenium&quot;</span><span class="nt">&gt;</span>
+<span class="lineno"> 8</span>   <span class="nt">&lt;exec</span> <span class="na">program=</span><span class="s">&quot;net.exe&quot;</span> <span class="na">commandline=</span><span class="s">&quot;stop Selenium&quot;</span> <span class="na">failonerror=</span><span class="s">&quot;false&quot;</span> <span class="nt">/&gt;</span>
+<span class="lineno"> 9</span>   <span class="nt">&lt;exec</span> <span class="na">basedir=</span><span class="s">&quot;${common.folder}&quot;</span> <span class="na">program=</span><span class="s">&quot;nssm.exe&quot;</span> <span class="na">commandline=</span><span class="s">&quot;remove Selenium confirm&quot;</span> <span class="na">failonerror=</span><span class="s">&quot;false&quot;</span> <span class="nt">/&gt;</span>
+<span class="lineno">10</span> <span class="nt">&lt;/target&gt;</span>
+</code></pre>
+</div>
+
+
+<p>On top of that, it is important to set the "nant.onfailure" property to a target that does all of your cleanup.  Since we're using NUnit, an error in the unit tests will signal a build failure, but we still want to ensure our cleanup runs.  So set the "nant.onfailure" property to the name of a target that runs all cleanup tasks (including "stop.selenium").</p>
+
+<p>Proper cleanup is very important, since in our case, the selenium.jar is in with the source and if it is still running, Team City will be unable to cleanup the working space and cause it to instantly fail any future builds before it even gets to executing your script.  Because of this, it might also be good to have the server do a scheduled task that calls "net stop Selenium".  If it is stopped already, no harm, if the service doesn't exist, no harm, but just a bit of an extra measure.  And finally, to be extra extra safe, I actually call our main cleanup target at the beginning of the build as well and set failonerror="false".  Since we're registering and running background processes, didn't want the test to be brittle and need my intervention.  I don't want "Ken, can you fix the build" emails.</p>
+
+<p>So few things to point out about using it:</p>
+
+<ul><li>One thing I got hung up on, you need the quotes around the "-jar ..." parameter on the exec line to nssm.exe.  I was missing that originally and wasted a lot of time, since I'd see the Java process start and be running in the process list, but couldn't communicate with the Selenium server.  The "-jar ..." line is a the parameter to java.exe though, and not nssm.exe, so it needs to know it is all one parameter.</li>
+<li>We have the location of the JDK set in the environment variables.  I don't like hardcoded paths in the scripts.</li>
+<li>Be careful of quotes!  I had to have the JDK_BIN set to a property because otherwise I'd get down to invalid quotes.  You can't have commandline='...."-jar ${environment::get-variable('JDK_BIN')}"'.... the second set of single-quotes will be closing the first one, not opening a new set.</li>
+<li>The "common.folder" and "source.folder" are just properties pointing to where some common utilities are and the current working directory for the source.</li></ul>
+
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Friday, March 12, 2010</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2010/03/11/team-city-its-levels-of-awesome/" title="Previous post: Team City & its levels of awesome">Team City & its levels of awesome</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2010/03/24/introducing-papercut-web-edition/" title="Next post: Introducing Papercut Web Edition">Introducing Papercut Web Edition</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

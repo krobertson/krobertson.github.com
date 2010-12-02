@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Deployments made easy &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Deployments made easy</h2>
+
+<div class="main">
+  <p>One thing I've been after for a while is a nice and easy way to roll out new builds of Community Server to my website.  Though my site isn't 100% stock.  I don't employ any custom code changes to the core libraries.  All of my customizations are leveraged through external libraries and adjustments to the configuration and skins.</p>
+
+
+
+
+<p>I like keeping my site up to date, so I wanted to find an easy way to apply the necessary changes as painlessly as possible.</p>
+
+
+
+
+<p>My first way was to create a small console application in .Net that copies the files/folders and opens the XML configuration files and makes the changes/adds the new pieces.  The problem with this way was when I wanted to make changes to the modifications it made.  Did I copy the new binary over?  Did I remember to update the version?  Did I build it in Debug or Release?  So the problem became that while it made the necessary changes, it wasn't as easy to change what it did.  If while deploying a new build, I remembered I needed to have it copy a new file, it wasn't necessarily a simply 30 second change.</p>
+
+
+
+
+<p>Then recently, I saw <a href="http://www.hanselman.com/blog/">Scott Hanselman's</a> <a href="http://www.hanselman.com/blog/ScottHanselmanDeveloperProductivityToolsVideoPart3.aspx">video #3 on developer productivity tools</a> featuring PowerShell.  I was immediately impressed with how you can interact with XML files in an almost object-oriented manner.  I thought perhaps I could write a small PowerShell script to handle the deployment and changes.  Though after trying it out, I realized that it was easy to change existing elements, but not quite as easy to add new elements (maybe it would be if we had a true schema, but we don't).</p>
+
+
+
+
+<p>I recently got a license to <a href="http://www.scootersoftware.com/">Beyond Compare</a> and had been checking it out.  It dawned on me that perhaps I could utilize beyond compare to generate a CVS or unix diff style patch file.  Unfortunately, Beyond Compare doesn't seem to support generating patches.  However after some searching, I found the <a href="http://unxutils.sourceforge.net/">UnxUtils</a> project which is to port a number of unix utilities to Windows.  In includes ports of the diff and patch utilities.  And with this, I was on my way to an easy deployment that is flexible to alterations...</p>
+
+
+
+
+<p>First, I needed to create a series of patch files for all the files I needed modified.  For this, you use the diff command to create a file detailing the changes.  Two important things to note when using it is that we want the context, or some of the lines around it included to help it locate where the change is.  Also, we want it to ignore whitespace.  The reason is that between builds, the spacing and line numbers can very easily change, causing it to then patch wrong.  But if I have it include the 2 lines above and below, it would be less prone to patch incorrectly and more likely to fail, which will let me know to take a quick look at it.</p>
+
+
+
+
+<blockquote>
+<pre><code>diff -c -w orig\communityserver.config mine\communityserver.config &gt; communityserver.patch
+diff -c -w orig\siteurls.config mine\siteurls.config &gt; siteurls.patch
+diff -c -w orig\web.config mine\web.config &gt; web.patch
+</code></pre>
+</blockquote>
+
+
+
+
+<p>This will generate all the necessary patch files that I'll need.  These are the main files I need changes to and cover some simple things like adding some CSModules and disable database storage in the communityserver.config, updating my connection string, and adding the ExtendedUrlMapper settings to the SiteUrls.config.</p>
+
+
+
+
+<p>After that, I just need to have my filesystem arranged.  My live site is always in the 'wwwroot' directory, while the new build is always put into a Web.rar file that gets extracted to a 'web' folder.  And then alongside that, I have a 'patch' folder which stores all my patch files.  The changes themselves are scripted out in a 'update.bat' file at the root of all of this.</p>
+
+
+
+
+<blockquote>
+<pre><code>/wwwroot    = Live site
+/web        = New site, extracted from an archive
+/patches    = Stores all the patch files
+/update.bat = Batch file containing all the commands to run
+</code></pre>
+</blockquote>
+
+
+
+
+<p>Once you have all of that laid out, all you need to do is create the batch file itself.  It is essentially going to perform two tasks... copy the files/directories you need, and apply the patches to the config files.</p>
+
+
+
+
+<blockquote>
+<pre><code>rem root
+copy wwwroot\robots.txt web\
+
+rem bin
+copy wwwroot\bin\FlickrNet.dll web\bin\
+copy wwwroot\bin\Qgyen.ExtendedUrlMapping.dll web\bin\
+copy wwwroot\bin\Qgyen.Lightbox.dll web\bin\
+
+rem utility
+xcopy /e /y /r wwwroot\utility\lightbox web\utility\lightbox
+
+rem patch config files
+patches\patch.exe -l web\communityserver.config patches\communityserver.patch
+patches\patch.exe -l web\siteurls.config patches\siteurls.patch
+patches\patch.exe -l web\web.config patches\web.patch
+</code></pre>
+</blockquote>
+
+
+
+
+<p>You can simply use the copy command to copy individual files, and use the xcopy command to copy entire directories.  It copies some of the files from my 'wwwroot' directory of my old build to the 'web' directory containing the new build.  After that, it will use patch to apply the patches in the 'patches' directory to the files in the 'web' directory.  Also specify the -l option for it to ignore whitespace as well.</p>
+
+
+
+
+<p>Now, once you have batch file and have run it, all you need to do is move the files into the wwwroot directory.  This could be added to the batch file as well, though I prefer to manually flip the switch and give a quick glance at the files to make sure they all succeeded.  Then I usually archive the 'wwwroot' folder, delete its contents, and then move the contents into it from the 'web' folder.</p>
+
+
+
+
+<p>This process is mostly useful if you have your own server or access to the console, though it could be useful even when a webhost.  It is always a good idea to keep a local mirror of what is on your webhost, so you could always run the batch file on the files locally, and then copy them to your webhost.  It would still eliminate, or at least easy, the changes needed.</p>
+
+
+
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Tuesday, August 08, 2006</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2006/08/04/qgyen-allcommentrss-for-cs-v2-1-rc1/" title="Previous post: Qgyen.AllCommentRss for CS v2.1 RC1">Qgyen.AllCommentRss for CS v2.1 RC1</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2006/08/09/improved-lightbox2-js-for-community-server/" title="Next post: Improved Lightbox2 JS for Community Server">Improved Lightbox2 JS for Community Server</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

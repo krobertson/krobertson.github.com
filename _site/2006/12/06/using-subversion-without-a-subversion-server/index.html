@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Using Subversion without a Subversion server &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Using Subversion without a Subversion server</h2>
+
+<div class="main">
+  <p>For a while now I've been using Subversion locally for version control on some of my small projects, but recently realized that I've been using it in a way that many people may not know is possible.&nbsp; I use Subversion without actually having a Subversion server anywhere in sight.&nbsp; How is this possible?&nbsp; Simple!</p>
+
+
+<p> <p>A Subversion repository is merely a set of files that hold all the information about the files, changes, and even users.&nbsp; The Subversion server is merely a gateway between the client and the repository files.&nbsp; If you take out the server and point the client directly the repository files, it will be right at home!</p> <p>Some of the advantages of using Subversion this way are:</p> <ul> <li>No software to install, configure, eat resources, or open any ports!  <li>Flat file based.&nbsp; Want to move your repositories elsewhere?&nbsp; Just move the files!  <li>Can place your repositories on a NAS device, USB drive, even USB memory stick.&nbsp; Since there is no software, the NAS device doesn't have to have a built-in Subversion server or any junk like that.  <li>Wanted them internet accessible.&nbsp; I have my repositories placed on my NAS device, so if I am out and about and need to get an update, I can just VPN into my home router, and then access it on the NAS device as if I was at home on the network.</li></ul> <p>So how can you configure Subversion to work this way?&nbsp; Follow these steps:</p> <ol> <li><a href="http://qgyen.net/blogs/blog/WindowsLiveWriter/UsingSubversionwithoutaSubversionserver_EDD2/svn_1%5B9%5D.png"><img height="91" src="http://qgyen.net/blogs/blog/WindowsLiveWriter/UsingSubversionwithoutaSubversionserver_EDD2/svn_1_thumb%5B7%5D.png" width="120" align="right" border="0"></a>Install TortoiseSVN.&nbsp; It rocks.  <li>Go to a place where you want the repositories to reside.&nbsp; These will not be your live usable files, these will be the files that are a part of the repository file structure.  <li>Create a new empty folder and use the name of the repository you want to create.  <li>Go into the folder, right click, and go to TortoiseSVN -&gt; Create repository here.&nbsp; Choose the Native filesystem.  <li>Go to where you want your live, usable files to be and create a new folder for them.  <li><a href="http://qgyen.net/blogs/blog/WindowsLiveWriter/UsingSubversionwithoutaSubversionserver_EDD2/svn_2%5B5%5D.png"><img height="91" src="http://qgyen.net/blogs/blog/WindowsLiveWriter/UsingSubversionwithoutaSubversionserver_EDD2/svn_2_thumb%5B3%5D.png" width="120" align="right" border="0"></a> Go into the new folder, right click and go to SVN Checkout.&nbsp; The URL of the repository will follow the "file://" pattern.&nbsp; Your base URL is "file:///" (yes, three slashes).&nbsp; From there, you will use your standard file path, leaving out any semi-colons (:) and changing "\" to "/".&nbsp; So if you created a repository at D:\repositories\test, you would use "file:///d/repositories/test".&nbsp; If you created the repository on another system or on a NAS device, where your address would normally be "\nas-device\repositories\test", you would use "file://///nas-device/repositories/test" (yup, 5 slashes).</li></ol> <p>One important thing to note about using Subversion this way is that there is&nbsp;limited security when working this way.&nbsp; Anyone who has access to the files will be able to get the files and make check-ins.&nbsp; If you wish to limit access, the best way would be through filesystem permissions.&nbsp; Additionally, on a network share or NAS box, you could require user logins to get access to the files.&nbsp; Another thing is that user tracking uses the username of the user on the Windows machine.&nbsp; You can still track who checked in what, but it gets the username automatically, without doing any user authentication on the repository.&nbsp; It will ignore the repositories conf\svnserve.conf and&nbsp;conf\passwd settings.</p> <p>The URLs you enter may not be the clearest, but this is by far the simplest way to get up and going with Subversion for your own personal use.&nbsp; My own repositories are kept on my NAS box, accessible from both my desktop and my laptop, and can even get on it remotely by VPN.&nbsp; All with zero install and configuration.</p></p>
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Wednesday, December 06, 2006</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2006/12/05/community-server-v2-1-sp2-now-live/" title="Previous post: Community Server v2.1 SP2 now live!">Community Server v2.1 SP2 now live!</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2006/12/10/are-you-obsessive-about-code-formatting/" title="Next post: Are you obsessive about code formatting?">Are you obsessive about code formatting?</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Telligent Community and Telligent Enterprise released! &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Telligent Community and Telligent Enterprise released!</h2>
+
+<div class="main">
+  <p>Today, all the Telligenti have been buzzing regarding the recent release of Telligent Community and Telligent Enterprise.  From <a href="http://telligent.com/newsroom/press-releases/telligent-announces-telligent-community-5-0-and-telligent-enterprise-2-0-and-previews-new-analytics-application/">telligent.com</a>:</p>
+
+
+<blockquote>&quot;Telligent, a leader in community, collaboration and social analytics software, today announced the availability of version 5.0 of Telligent Community (previously Community Server) and version 2.0 of Telligent Enterprise (previously Community Server Evolution). The latest versions of Telligent&rsquo;s community and collaboration software represent the company&rsquo;s ongoing commitment to innovation and enterprise collaboration.&quot;</blockquote>
+
+
+<p>Finally, after months of feverish development, we've reached the point of a release for what is probably our biggest release in history.  Our v5.0 is unlike any of our previous major releases.  We have a completely new permissions system, revamped groups, new search, new email templating, and new widget based theming.</p>
+
+
+<p>Soon I'll be having a series of posts going over some of the bigger technical points in some of my areas of expertise.  In particular with this release, I'd worked on the search implementation and the new email templating.</p>
+
+
+<p>In previous versions of CS, we had two implementations of search, the default Search Barrel and the more powerful Enterprise Search, which was built on Lucene.Net.  Now, we've changed the search to be much easier to extend and change out.  Previously, search was tightly coupled to the index.  You couldn't easily add new types to Enterprise Search or index additional fields.</p>
+
+
+<p>Our new search is comprised of a series of mappers, which define how to convert an object into a searchable document, and define your own content handlers, which are used to grab objects that need to be indexed, have them mapped, and passed over to the index.  You can easily build on top of existing mappers, create mappers for new types, and add new content handlers to the search process.  Additionally, the search is broken out into indexing and search, allowing you to easily create your own implementations.  Our included implementation is now based on Solr.  Why Solr?  A better question is why not Solr?  It did everything we wanted and then some.  It is feature packed, high performance, and super reliable.  With it, we were also able to easily build in thread collapsing.  Tired of the search results all being messages from the same thread?  Now we can collapse down the results, combining all the posts from a single thread into just one result.</p>
+
+
+<p>What's new with emails?  Over time, we found the old email templates to be too limiting.  We had one big XML file containing all the emails, people often ran into confusion when editing HTML emails (since they had to be XML escaped), and the default tokens were limiting depending on the types of customizations you'd want to make.  Our new emails are entirely based on nVelocity.  If you are familiar at all with the theming in Graffiti, you will be right at home in the new email templates.  The templates produce the mime documents that get sent out, allowing you do manipulate the message headers, attachments, and body content.  Instead of providing a fixed set of tokens like [PostDate], you get the actual objects.  You can now use $post.PostDate, or call $post.PostDate.ToString() and pass in a custom formatter.  Want to do more?  Can easily create Chalk modules to add new macros, or TemplateModules to manipulate the nVelocity context before templating, or the processed mime object after processing (useful for adding binary attachments and such).</p>
+
+
+<p>Want to know more?  Keep posted.</p>
+
+
+
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Tuesday, June 23, 2009</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2009/06/12/know-thy-customer/" title="Previous post: Know thy customer">Know thy customer</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2009/06/26/tc5-0-email-templates-an-overview/" title="Next post: TC5.0 Email Templates: An Overview">TC5.0 Email Templates: An Overview</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

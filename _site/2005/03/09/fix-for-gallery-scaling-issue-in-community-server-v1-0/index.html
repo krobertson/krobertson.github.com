@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Fix for Gallery scaling issue in Community Server v1.0 &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Fix for Gallery scaling issue in Community Server v1.0</h2>
+
+<div class="main">
+  <p>With the release of the <a href="http://www.qgyen.net/blog/archive/2005/03/03/951.aspx">nGallery to CS converter</a>, we finally got people with good sized nGallery installs running on Community Server.&nbsp; Prior to this, it was most myself and others running fair small, frequently rebuilt installations, or my own website, which only has a moderate amount of pictures.</p>
+
+
+<p>So we instantly started getting people with thousands of pictures in their Gallery and some bad performance issues started showing up.&nbsp; With some debugging, we tracked it down to the cs_PostCategories_Get procedure timing out, causing an exception, and breaking a bunch of things.</p>
+
+
+<p>The cause of the problem?&nbsp; The procedure was using some inefficient SQL in order to get the total number of posts and the most recent post date&nbsp;in it and a total of&nbsp;all of its subcategories.&nbsp; Namely, it was using a couple of subqueries (meaning query within a query within a query), the IN clause, and a &ldquo;select top 1 &hellip; order by postdate desc&rdquo; in a few of the subqueries.&nbsp; On one database with ~95 categories and ~4000 pictures, this command could take almost a minute to execute.</p>
+
+
+<p>The solution?&nbsp; We updated the sproc to use max(PostDate) instead of the top/order by.&nbsp; This brought the execution time down to ~1 second.&nbsp; We also changed all the subsubqueries and IN clauses to be inner joins.&nbsp; Doing this brought the execution time down to &lt;1 second.&nbsp; On my own site, which has about 50 categories and around 900 pictures, execution time went from 4 seconds to &lt;1 second.</p>
+
+
+<p>To update the cs_PostCategories_Get procedure on your own site, run the following script:</p>
+
+
+<blockquote dir="ltr">
+<p>SET QUOTED_IDENTIFIER OFF <br />GO<br />SET ANSI_NULLS ON <br />GO</p>
+<p>if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[cs_PostCategories_Get]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)<br />drop procedure [dbo].[cs_PostCategories_Get]<br />GO</p>
+<p>CREATE PROCEDURE dbo.cs_PostCategories_Get<br />&nbsp;@SectionID int=0,<br />&nbsp;@ApplicationKey nvarchar(256)=null,<br />&nbsp;@CategoryType smallint<br />AS</p>
+<p>if @ApplicationKey Is Not Null<br />begin<br />&nbsp;SELECT C.*,<br />&nbsp;&nbsp;TotalThreads = (SELECT COUNT(PIC.PostID) FROM cs_Posts_InCategories PIC INNER JOIN cs_Posts jP ON (jP.PostID = PIC.PostID AND jP.PostID = jP.ParentID) WHERE PIC.CategoryID = C.CategoryID),<br />&nbsp;&nbsp;TotalSubThreads = (SELECT COUNT(P.PostID) FROM cs_Posts P INNER JOIN cs_Post_Categories jC ON (jC.CategoryID = C.CategoryID OR jC.Path LIKE C.Path + convert(nvarchar, C.CategoryID) + '/%') INNER JOIN cs_Posts_InCategories jPIC ON (jPIC.CategoryID = jC.CategoryID) WHERE P.PostID = P.ParentID AND P.PostID = jPIC.PostID),<br />&nbsp;&nbsp;MostRecentPostDate = (SELECT MAX(PostDate) FROM cs_Posts_InCategories PIC INNER JOIN cs_Posts jP ON (jP.PostID = PIC.PostID AND jP.PostID = jP.ParentID) WHERE PIC.CategoryID = C.CategoryID),<br />&nbsp;&nbsp;MostRecentSubPostDate = (SELECT MAX(PostDate) FROM cs_Posts P INNER JOIN cs_Post_Categories jC ON (jC.CategoryID = C.CategoryID OR jC.Path LIKE C.Path + convert(nvarchar, C.CategoryID) + '/%') INNER JOIN cs_Posts_InCategories jPIC ON (jPIC.CategoryID = jC.CategoryID) WHERE P.PostID = P.ParentID AND P.PostID = jPIC.PostID)<br />&nbsp;FROM cs_Post_Categories C<br />&nbsp;LEFT JOIN cs_Sections F ON F.SectionID = C.SectionID<br />&nbsp;WHERE F.ApplicationKey = @ApplicationKey<br />&nbsp;&nbsp;AND C.CategoryType = @CategoryType<br />end<br />else<br />begin<br />&nbsp;SELECT C.*,<br />&nbsp;&nbsp;TotalThreads = (SELECT COUNT(PIC.PostID) FROM cs_Posts_InCategories PIC INNER JOIN cs_Posts jP ON (jP.PostID = PIC.PostID AND jP.PostID = jP.ParentID) WHERE PIC.CategoryID = C.CategoryID),<br />&nbsp;&nbsp;TotalSubThreads = (SELECT COUNT(P.PostID) FROM cs_Posts P INNER JOIN cs_Post_Categories jC ON (jC.CategoryID = C.CategoryID OR jC.Path LIKE C.Path + convert(nvarchar, C.CategoryID) + '/%') INNER JOIN cs_Posts_InCategories jPIC ON (jPIC.CategoryID = jC.CategoryID) WHERE P.PostID = P.ParentID AND P.PostID = jPIC.PostID),<br />&nbsp;&nbsp;MostRecentPostDate = (SELECT MAX(PostDate) FROM cs_Posts_InCategories PIC INNER JOIN cs_Posts jP ON (jP.PostID = PIC.PostID AND jP.PostID = jP.ParentID) WHERE PIC.CategoryID = C.CategoryID),<br />&nbsp;&nbsp;MostRecentSubPostDate = (SELECT MAX(PostDate) FROM cs_Posts P INNER JOIN cs_Post_Categories jC ON (jC.CategoryID = C.CategoryID OR jC.Path LIKE C.Path + convert(nvarchar, C.CategoryID) + '/%') INNER JOIN cs_Posts_InCategories jPIC ON (jPIC.CategoryID = jC.CategoryID) WHERE P.PostID = P.ParentID AND P.PostID = jPIC.PostID)<br />&nbsp;FROM cs_Post_Categories C<br />&nbsp;WHERE C.SectionID = @SectionID<br />&nbsp;&nbsp;AND C.CategoryType = @CategoryType<br />end</p>
+<p>GO<br />SET QUOTED_IDENTIFIER OFF <br />GO<br />SET ANSI_NULLS ON <br />GO</p>
+<p>GRANT&nbsp; EXECUTE&nbsp; ON [dbo].[cs_PostCategories_Get]&nbsp; TO [public]<br />GO</p></blockquote>
+
+
+<p dir="ltr">I&rsquo;d also recommend that if you are running the nGallery to CS::Gallery converter, that afterwards you rebuild the indexes on all of the CS tables.&nbsp; You could do this by running the script <a href="http://www.sql-server-performance.com/rebuilding_indexes.asp">on this site</a>.</p>
+
+
+
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Wednesday, March 09, 2005</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2005/03/04/this-is-a-quick-test/" title="Previous post: This is a quick test...">This is a quick test...</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2005/03/10/nerdbooks-moved-to-texas/" title="Next post: Nerdbooks moved to Texas!?">Nerdbooks moved to Texas!?</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

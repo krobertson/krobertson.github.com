@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Team City & its levels of awesome &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Team City & its levels of awesome</h2>
+
+<div class="main">
+  <p>Recently, I've been working on migrating our build process at <a href="http://telligent.com">Telligent</a> from using <a href="http://ccnet.thoughtworks.com/">Cruise Control .NET</a> to use <a href="http://www.jetbrains.com/teamcity/">JetBrain's Team City</a>.  Cruise Control has served us well, but after looking at the feature set of Team City, it had a number of things that we were wanting to leverage as we continued to expand our build process.  Was asked on Twitter what I liked so much about Team City versus Cruise Control, but there wasn't a good way to sum it up in 140 characters.  So here is a brief list of some of the reasons:</p>
+
+<ol>
+    <li>No XML configuration files.  Granted, our builds are in <a href="http://nant.sourceforge.net/">NAnt</a>, so we're still married to XML, but creating a new build doesn't need to take any XML editing anymore.  Our build scripts have no hard coded values, everything it needs it passed in from Team City.  So we can go an existing build, click Copy, then just edit the configuration settings as needed.</li>
+    <li>It queues builds.  We run a number of daily builds at 4pm Central and at that time, the build server comes to a screeching halt because all of them run at the same time.  We've <em>had</em> to stagger them an extend the timeout limit on several because of how slow it gets.  Team City instead runs one at a time, queues the others, and lets you prioritize the queue if you need to bump things up.</li>
+    <li>Does more for you.  First of all, it exports the source from the main repository cache for you.  When building, you want to avoid working off the main repository cache since then you can get stuck with collisions on update, but with CC.NET, we always had to do the export and everything ourself.  Team City takes care of and reverts the source to a clean state one each run.</li>
+    <li>Artifacts and cross dependencies.  In CC.NET, we always had a network share set up where we'd place built packages, but with Team City, they can be loaded back into the main site for storage and easily accessible.  On top of that, you can place dependencies between builds and have the artifacts extracted.  For instance, we have one built that fully packages a release every day.  We have another build that our Selenium tests.  We have a build dependency on them so that Team City extracts our latest package and the build script sets it up in IIS and runs against it.  As time goes on and we get more of our subcomponents into Team City, ensuring all subcomponents stay up to date will be automated and far easier.</li>
+    <li>Streaming build log.  No longer do I need to wait for the build to be done to see what is going on.  Team City can stream the build log to the browser, so I can see where its at, what is hung up on, or if it did something wrong that wasn't an error, can stop the build and correct it.</li>
+    <li>Easily customize builds.  A while ago, we'd built a "preview build" and then a short while afterwards, realized there was an issue with the build.  Not with the code, but just the build process.  We needed to send an updated one, but wasn't sure if the latest code was at a release-worthy state.  Luckily, Team City makes it super easy.  Right through the interface, I was able to kick off a new build of the same SVN revision as the earlier one.  It also was intelligent enough so that in the history, it distinguishes it so someone knows it is different and in the description, says it is a build of an earlier commit and out of line with the other builds.</li>
+    <li>Test history.  We've just started pulling in our test builds, but one nice thing I've immediately notice is some of the rich reporting it has around test stats.  For instance, it shows when a test started failing (if its been in multiple builds), allows you assign someone to be responsible, allows you to track a test's history, and even identify problematic tests (probably ones that fail the most).  You can even track the test duration and see it change over time.</li>
+</ol>
+
+
+<p>Overall, would have to sum Team City up as just being incredibly refined.</p>
+
+<p>I know a number of people who have larger Cruise Control setups than us, but overall Team City brings a lot to the table and the cost factor makes it a dead on winner.  Team City can easily pay for itself just in terms of productivity.  But on top of that, it is free up to 20 build configurations!</p>
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Thursday, March 11, 2010</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2010/03/04/trunks-officially-launched/" title="Previous post: Trunks officially launched">Trunks officially launched</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2010/03/12/selenium-server-in-nant/" title="Next post: Selenium Server in NAnt">Selenium Server in NAnt</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

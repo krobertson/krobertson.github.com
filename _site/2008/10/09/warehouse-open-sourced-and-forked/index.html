@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Warehouse open sourced, and forked &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Warehouse open sourced, and forked</h2>
+
+<div class="main">
+  <p>Last week, <a href="http://entp.com/">ENTP</a>/<a href="http://activereload.net/">Active Reload</a> <a href="http://hoth.entp.com/2008/9/30/warehouse-is-now-open-source">open sourced</a> their web-based Subversion browser <a href="http://warehouseapp.com">Warehouse</a>.  I've been using Warehouse on my own box for about six months for my personal Subversion repositories and had been anxiously awaiting their next release, since it was supposed to add support for Git.</p>
+
+
+
+
+<p>With it being open sourced, and on Github, I went ahead and <a href="http://github.com/krobertson/warehouse">forked it</a> almost right away.  One of the first things I wanted to do was to port some of my customizations from 1.1.6 over to the latest code.  I had made a number of tweaks to make it so that Warehouse itself managed the Subversion repositories, rather than you pointing it to an existing repository.  Also fixed up a few incomplete/unused parts like its dashboard, added the ability to display README files inline with the directory listing (like Github) and so on.</p>
+
+
+
+
+<p>With the open sourcing, it looks like a lot of their support for Git was half done.  It supports browsing and changesets, but has nothing for adding Git repositories, and have had a few issues with syncing changesets.  I've fixed it up so that things basically work, though unsure about how much effort it would take to finish it.  If you're using something like <a href="http://scie.nti.st/2007/11/14/hosting-git-repositories-the-easy-and-secure-way">Gitosis</a> (which I am), don't know if a lot of the management is needed.  Gitosis takes care of most of creating repositories, SSH keys, and permisisons, but it is still nice to have the repositories browsable on the web and easily manageable.  If collaborating with some others on a project, it is nice to create an account for them and add their SSH keys themselves.  Could have Warehouse write to and commit the gitosis.config, though that seems a little funky.</p>
+
+
+
+
+<p>Overall, I am not sure how far I am going to take my improvements on Warehouse.  But in general, the code could use a lot of clean up, as the <a href="http://twitter.com/technoweenie/statuses/940866500">author admits</a>.  What would be really nice would be a rewrite in Merb/DataMapper, and designed to be more SCM agnostic, so it could also work with Bazaar or Mercurial.</p>
+
+
+
+
+<p>Another thought is to have built in WebDAV support, so it isn't dependent upon outside processes for serving the actual files.  Right now, it basically assumes mod_dav_svn in Apache, likely Gitosis for git, or possibly WebDAV.  But with those, taking the management of passwords and permissions takes additional steps to set up... you can't just install and run.  Though rewriting would be a big undertaking, which I'm not sure if I am up for.  I tend to jump between extracurricular projects, as they tend to mound up.</p>
+
+
+
+
+<p>If you do clone <a href="http://github.com/krobertson/warehouse">my code</a>, be aware the installer is currently broke.  My changes introduced some new configuration settings that the default installer doesn't create.  Going to be fixing that.</p>
+
+
+
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Thursday, October 09, 2008</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2008/10/04/who-are-they-trying-to-impress/" title="Previous post: Who are they trying to impress?">Who are they trying to impress?</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2008/10/29/introducing-papercut/" title="Next post: Introducing Papercut!">Introducing Papercut!</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

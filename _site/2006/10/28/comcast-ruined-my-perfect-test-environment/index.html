@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Comcast ruined my perfect test environment &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Comcast ruined my perfect test environment</h2>
+
+<div class="main">
+  <p>I hate Comcast.&nbsp; I've <a href="http://qgyen.net/archive/2005/09/23/1102.aspx">posted before</a> about how much I dislike them.&nbsp; Now they've gone and ruined my ideal testing environment.</p>
+
+
+<p> <p>I am a total fan of using virtual machines.&nbsp; I spin a new one up whenever I have a new piece of software to test in an environment other than my own, or if I want to try out some software before installing it on my desktop.&nbsp; I have a nicely equipped server specifically for virtual machines.&nbsp; I use VMware Server running on top of Windows 2003.</p> <p><a href="http://qgyen.net/images/Comcastruinedmyperfecttestenvironment_A091/vmware18.png"><img style="border-right:0px;border-top:0px;margin:0px 0px 0px 10px;border-left:0px;border-bottom:0px;" height="163" src="http://qgyen.net/images/Comcastruinedmyperfecttestenvironment_A091/vmware_thumb14.png" width="320" align="right" border="0"></a> Earlier this week, I had an idea for tweaking it out to be the ultimate test environment.&nbsp; I could install a mail server on it and add an MX record to my DNS for *.subdomain.qgyen.net, that way I could run lives tests on things like Mail Gateway.&nbsp; And on top of that, I could have the server run ISA Server and easy make sites on the various virtual machines publicly accessible.&nbsp; It know that when it receives a web request for test1.subdomain.qgyen.net, to redirect it to the proper internal virtual machine.&nbsp; It was working delightfully.</p> <p>Then Comcast laid the smackdown on me last night.&nbsp;&nbsp;I haven't gotten any confirmation, but around 7pm, my connection went down.&nbsp; Finally, after a couple of hours, I started getting intrigued and was messing around.&nbsp; The cable modem showed it had a full signal, however it wouldn't pair up with the public network card.&nbsp; So then I switched it back to my old Linksys router with DD-WRT, and it works flawlessly.&nbsp; Go back to my server, nothing.&nbsp; Arg!</p> <p>So after 3 days of utilizing the server for some testing, mostly doing some test emailing, Comcast decides to block it?&nbsp; What gives!&nbsp; Heck, years ago, I used run my entire domain from my home server.&nbsp; Email, website, and all.&nbsp; And they never blocked me.&nbsp; Now, maybe a couple of dozen emails over a few days and I get blocked.</p> <p>I could do the same set up for email with DD-WRT no problem, but don't know about making the websites accessible (unless I did them using port translation).&nbsp; But even then, I think I will try to get some confirmation from Comcast before I do, since if they block my Linksys router, then I am really going to be pissed.&nbsp; I hate Comcast.</p></p>
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Saturday, October 28, 2006</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2006/10/24/when-project-schedule-run-amuck/" title="Previous post: When project schedule run amuck">When project schedule run amuck</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2006/10/28/this-2-0-business-has-gone-too-far/" title="Next post: This &quot;2.0&quot; business has gone too far">This &quot;2.0&quot; business has gone too far</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Impressions of Windows Media Center 2005 &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Impressions of Windows Media Center 2005</h2>
+
+<div class="main">
+  <p>Last week, I got my Microsoft Action Pack subscription.&nbsp; A part of it was an OEM copy of MCE 2005.&nbsp; For a while, I&rsquo;ve been planning on having a central media server when I move.&nbsp; Have all TV viewing come from a central place, with pause/replay, recording, etc.</p>
+
+
+<p>Currently, it has just been my computer connecting to a separate dedicated media server which does all of the recording.&nbsp; I have been using Snapstream BeyondTV v3.0, but I am somewhat disappointed with it.&nbsp; First of all, one of its major pluses was that I could connect to it from my PC, but it often had poor performance, such as 50% cpu usage on a 3.2ghz when watching live TV.&nbsp; Second, it had no HD support, which was something I was really wanting.&nbsp; And third, no pictures/videos/DVD support without buying their Beyond Media product as well.&nbsp; Finally, in order to watch TV on an actual TV, I&rsquo;d either have to build a mini media server and buy another BeyondTV Link license, or get the MediaMVP and use a kind of hack to change it to work with BeyondTV.</p>
+
+
+<p>Obviously, an attraction to MCE was that it support HDTV.&nbsp; From playing around with it in stores, I&rsquo;d noticed that the interface was far more intuitive, sleeker, and faster.&nbsp; Even things like overlays on videos were far cleaner and did not cause video stuttering.&nbsp; Additionally, since it is Microsoft, there is bound to be more manufacturer adoptance, such as with the Media Extenders that easy viewing from TVs, and addins such as NPR, Reuters, ESPN, XM, etc.&nbsp; It also has a nice, open SDK allowing me to write my own addins, if I ever find something to write and the time to write it.</p>
+
+
+<p>After playing around with it for the past few days, I&rsquo;ve got it running quite smoothly.&nbsp; Had a view audio and mpeg decoder issues, but finally got all of those tweaked out and performing well.&nbsp; Was getting this odd muting of the audio for a couple of seconds when using the SPD/IF out.&nbsp; Finally found if I tweaked the decoder&rsquo;s audio configuration to use the SPD/IF, it went away.&nbsp; Finally, was having some issues playing HD streams.&nbsp; The PowerDVD6 codec was frequently spiking the CPU to 100% and causing stuttering and slow system responses to remote/keyboard commands.&nbsp; Then the nVidia codec was being picky about some channels and would oddly stop playing when watching LiveTV, as if it reached the end of a video.&nbsp; The WinDVD6 decoder played everything flawlessly.&nbsp; Audio stutters had gone away and&nbsp;HD played great with no CPU spikes.&nbsp; Was also having some antenna issues with HD channels, but found the RF antennas were conflicting with UHF reception somehow.&nbsp; Unscrewed them and all was golden.</p>
+
+
+<p>My one annoyance is that you can&rsquo;t watch live TV from another computer.&nbsp; If the extenders can play live TV over the network, it is obviously capable of doing it, but there is no application to let you connect to MCE from a remote machine with the full interface, a sort of &ldquo;Media Center Extender Lite&rdquo;.&nbsp; People say you can remote desktop into it, but what good is that to watch TV?&nbsp; I can watch the recorded programs over a file share, but it is not live TV, and it is not the rich interface.</p>
+
+
+<p>Aside from that, I am quite pleased.&nbsp; It is incredibly easy to use (once configured), so Trish should have no problems using it.&nbsp; Has nice, rich interface, plenty of plugins, and even more to come.</p>
+
+
+
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Thursday, March 31, 2005</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2005/03/23/crossfader-launched/" title="Previous post: Crossfader launched!">Crossfader launched!</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2005/03/31/trillian-not-working-with-msn-messanger/" title="Next post: Trillian not working with MSN Messanger?">Trillian not working with MSN Messanger?</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

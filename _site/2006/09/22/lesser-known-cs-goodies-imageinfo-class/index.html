@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Lesser known CS goodies: ImageInfo class &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Lesser known CS goodies: ImageInfo class</h2>
+
+<div class="main">
+  <p><a href="http://kevinharder.com/blogs/kevin/">Kevin</a>&nbsp;came to me the other day and was asking about whether I knew of a good way to efficiently extract the dimensions of 100+ images.&nbsp; He said he was starting to look at the System.Drawing namespace and was curious what the best way was.</p>
+
+
+<p> <p>I immediately&nbsp;turned on my caps and said NO!&nbsp; DON&#39;T DO IT!&nbsp; Don&#39;t get me wrong, the System.Drawing namespace is great, but when you just need the dimensions of an image, and you are processing 100 images, it is not very efficient.&nbsp; It will need to load up the entire image, just so you can access some metadata about it.&nbsp; Do that 100+ times on a given run, and it will be incredibly slow and CPU hungry.</p> <p>I had encountered the same issue way back when we were developing Community Server v1.0.&nbsp; I had begun prototyping the FTP Gateway and one of my main things was that I wanted to queue up 1000 images to be sent in a row.&nbsp; It worked, but would have the CPU pinned at 80-100% the whole time.&nbsp; The problem was that the images would transfer so fast (since it was on the local network), and the slow down was where it accessed the image&#39;s dimensions and cached the EXIF data.&nbsp; Initially, we were using the System.Drawing namespace and was having to process the entire image when we were just accessing the metadata.</p> <p>So I set out to find a way to access the image&#39;s metadata directly, by looking at the raw header instead of relying on accessing it as an image.&nbsp; The solution was <a href="http://schmidt.devlib.org/image-info/">ImageInfo</a>.&nbsp; I found this class that did precisely what I wanted, just that it was written in Java.&nbsp; So I did what any determined developer would do and decided to port it.&nbsp; And in one night, I was able to get it ported over to C#, plugged into CS, and working in both the CS website and with the FTP Gateway.</p> <p>This class has been a part of Community Server v1.0 around beta2 or 3.&nbsp; It is in the CommunityServer.Components project, with its full namespace being CommunityServer.Components.ImageInfo.&nbsp; Since it is in Components, it is accessible by all CS assemblies.&nbsp; It is also quite easy to use.&nbsp; Just take this little tidbit:</p> <blockquote> <div class="CodeFormatContainer"></p>
+
+<p> <pre class="csharpcode"><div id="57F11A72-B0E5-49c7-9094-E3A15BD5B5E6:688b696e-1198-43a1-b25c-89dcb5f0b204" class="wlWriterSmartContent" style="margin:0px;padding:0px;display:inline;float:none;"><pre style="background-color:White;"><div><span style="color:#008000;">//</span><span style="color:#008000;"> Check to make sure it is a valid image</span><span style="color:#008000;"><br /></span><span style="color:#000000;">FileStream stream </span><span style="color:#000000;">=</span><span style="color:#000000;"> File.Open(</span><span style="color:#000000;">&quot;</span><span style="color:#000000;">image.jpg</span><span style="color:#000000;">&quot;</span><span style="color:#000000;">, FileMode.Open);<br />ImageInfo imageInfo </span><span style="color:#000000;">=</span><span style="color:#000000;"> </span><span style="color:#0000ff;">new</span><span style="color:#000000;"> ImageInfo(stream);<br /></span><span style="color:#0000ff;">string</span><span style="color:#000000;"> contentType;<br /></span><span style="color:#0000ff;">int</span><span style="color:#000000;"> width;<br /></span><span style="color:#0000ff;">int</span><span style="color:#000000;"> height; <br /><br /></span><span style="color:#008000;">//</span><span style="color:#008000;"> If it is a picture, get the imagesize</span><span style="color:#008000;"><br /></span><span style="color:#0000ff;">if</span><span style="color:#000000;"> (imageInfo.Check())<br />{<br />   </span><span style="color:#008000;">//</span><span style="color:#008000;"> Get the image&#39;s width and height settings</span><span style="color:#008000;"><br /></span><span style="color:#000000;">   contentType </span><span style="color:#000000;">=</span><span style="color:#000000;"> imageInfo.MimeType;<br />   width </span><span style="color:#000000;">=</span><span style="color:#000000;"> imageInfo.Width;<br />   height </span><span style="color:#000000;">=</span><span style="color:#000000;"> imageInfo.Height;<br />} <br /><br />stream.Close();</span></div></pre></div></pre></div></blockquote></p>
+
+<p>This is a simple and straightforward way to access some basic information about the image.&nbsp; Create a new ImageInfo object with the stream of the file.&nbsp; Then, call the imageInfo.Check() method to do the actual processing of the file.&nbsp; If it returns true, it is a valid image type of either JPEG, PNG, GIF, BMP, and a couple others.&nbsp; After that, you can access the properties that contain the info about the image.&nbsp; Overall, it gathers the following: </p>
+
+
+<ul>
+<li>Width/height 
+</li><li>Bits per pixel 
+</li><li>Whether the image is progressive 
+</li><li>The image format (an enum of either JPEG, GIF, BMP, etc) 
+</li><li>The content type (as a string) 
+</li><li>Color type 
+</li><li>Comments from the image (such as in JPEG files) 
+</li><li>Number of images (such as with animated GIFs) 
+</li><li>Physic width and height DPI</li></ul>
+
+
+<p>Use it, love it, and enjoy it.&nbsp; Joy me next time, as I may make this into a semi-regular series to expose developers and power users to some of the great utilities buried deep within CS.</p>
+
+
+
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Friday, September 22, 2006</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2006/09/20/why-dont-banks-use-rss/" title="Previous post: Why don't banks use RSS?">Why don't banks use RSS?</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2006/09/26/final-reminder/" title="Next post: Final reminder!">Final reminder!</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>

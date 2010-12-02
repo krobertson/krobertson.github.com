@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Datacenter fun &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Datacenter fun</h2>
+
+<div class="main">
+  <p><a href='http://static.flickr.com/2153/1603032194_efb377690e_b.jpg' title='Servers in the datacenter' details='http://www.flickr.com/photos/99026274@N00/1603032194/' detailsText='Flickr page' rel='lightbox[dc]'><img src='http://static.flickr.com/2153/1603032194_efb377690e_m.jpg' border='0' class='floatleft'></a> <p>I had <a href="http://qgyen.net/archive/2007/03/12/another-hobby-of-mine-servers.aspx">posted a while ago</a> about my fascination with servers, and this weekend I expanded upon my setup a little bit further.&nbsp; I previously had a single server installed, and additional hardware spam filter.&nbsp; Recently I&#39;d decided the spam filter wasn&#39;t working out quite how I liked it since their licensing of &quot;per-user&quot; was too wide on what was considered a user.&nbsp; Additionally, on the main server, I was pretty much reaching my capacity in terms of disk space.</p> <p>After 6 months of having it deployed, I had it to a nice level where the services I was offering were nice and stable, the server was paying for itself pretty well, and I&#39;d decided to kick it up a notch closer to where I&#39;d ultimately envisioned it.</p> <p>My vision is basically to have a high availability server with no single point of failure.&nbsp; This isn&#39;t really something I can do overnight, so doing it incrementally as I can make certain upgrades.&nbsp; Overall, need multiple virtual server nodes with failover, shared storage with replication and failover (multi-pathing), each server hooked up to two ethernet switches in spanning tree, all servers with redundant power supplies hooked up to separate power circuits, etc.&nbsp; It isn&#39;t necessarily rocket science, basically just two of everything.&nbsp; This kind of goal is a ways off.&nbsp; It isn&#39;t necessarily expensive to do if you do it as you have the demand/income to do it.</p> <p>Why do something like this?&nbsp; Because it is fun... if that makes any sense.&nbsp; It is a little bit of a challenge and can be interesting to attempt.&nbsp; IE, for redundant storage, want to play around with looking at Solaris + ZFS + SunCluster (to get HA-ZFS) + iSCSI Target.&nbsp; Surprisingly, that setup is not some super expensive enterprise setup, just takes some time to configure and test.</p> <a href='http://static.flickr.com/2113/1603044742_da465007fc_b.jpg' title='Back end of servers' details='http://www.flickr.com/photos/99026274@N00/1603044742/' detailsText='Flickr page' rel='lightbox[dc]'><img src='http://static.flickr.com/2113/1603044742_da465007fc_m.jpg' border='0' class='floatright'></a> <p>So what all did I do this weekend?&nbsp; I basically went from a single server to five servers, plus my own switch, and added in a hardware firewall.&nbsp; Software firewalls are ok, but can be annoying sometimes.&nbsp; I&#39;ve seen Windows updates that reset some firewall rules, or reactivate the firewall on NICs that it was disabled on before.&nbsp; They don&#39;t protect against things like DoS/DDoS.&nbsp; And I&#39;ve seen exploits/viruses that are actually kind enough to open up firewall ports for the backdoors they install.&nbsp; How nice of them.</p> <p>It total, it took me 14 hours to get everything up and running.&nbsp; Was one obstacle after another, since additional power was added, but it wasn&#39;t brought into the rack, I had a last-minute configuration change made to the firewall that broke some stuff (doh), installing the rails and running cables was a pain since the rack is very tight on space (not conducive to nice cable management).&nbsp; And then I had to migrate a bunch of data and repurpose the old server, which took forever and then some.&nbsp; So I was there from about 12 noon til about 2am... but it was a good time... just not something I want to do <em>that</em> often.</p> <p>So now my little network is made up of Dell servers, HP ProCurve networking, and Juniper routing/security.&nbsp; That 24 port switch fills up quickly when you have 3 connections per server (one for public traffic, one for iSCSI traffic, and one for remote management).</p></p>
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Wednesday, October 17, 2007</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2007/10/11/more-of-nick/" title="Previous post: More of Nick">More of Nick</a></div>
+  
+  
+  
+    <div class="next"><a class="next" href="/2007/10/18/microsoft-money-online-service-expiration/" title="Next post: Microsoft Money online service expiration?">Microsoft Money online service expiration?</a> &rarr;</div>
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:jon.smajda.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
+        
+          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a> &mdash; Built for <a href="http://wordpress.org/">WordPress</a></p>
+  </div>
+
+<!--
+    <div id="nav">
+            <h1><a href="/">In Valid Logic</a></h1>
+
+            <ul>
+                <li><a href="/archive/">Archive</a></li>
+                <li><a href="/about/">About This Blog</a></li>
+                <li><a href="/rss.xml">RSS</a> | <a href="/atom.xml">Atom</a></li>
+            </ul>
+
+
+            <h3>about me</h3>
+            <p>I am a PhD candidate in sociology at the 
+              <a href="http://www.soc.umn.edu">University of Minnesota</a>. I work for 
+              <a href="http://contexts.org">Contexts</a>.</p>
+
+            <h3>more me</h3>
+
+            <ul>
+                <li><a title="smajda.tumblr.com" href="http://smajda.tumblr.com">tumblr</a></li>
+                <li><a title="@smajda on twitter" href="http://twitter.com/smajda">twitter</a></li>
+                <li><a title="facebook.com/jonsmajda" href="http://facebook.com/jonsmajda">facebook</a></li>
+                <li><a title="I do try" href="http://github.com/smajda">github</a></li>
+                <li><a title="Silly music" href="http://soundcloud.com/smajda">soundcloud</a></li>
+            </ul>
+
+            <h3>aggregate feed</h3>
+            <p>I made <a href="http://files.smajda.com/jon/feeds/aggregate/">an aggregate feed</a> of all my online activity. (I made it using <a href="http://simplepie.org/">SimplePie</a>. You can <a href="http://gist.github.com/204194">get the code here</a>.)</p>
+
+
+    </div>
+
+    <div id="content">
+
+
+    <div id="footer">
+        <p>The content of this site is licensed under a <br /><a href="http://creativecommons.org/licenses/by-nc-sa/3.0/us/">Creative Commons Attribution-Noncommercial-Share Alike 3.0 license</a>.</p>
+
+    </div>
+
+    </div>
+-->
+</body>
+</html>
