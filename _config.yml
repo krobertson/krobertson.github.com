@@ -5,13 +5,6 @@ url: "http://invalidlogic.com"
 author: "Ken Robertson"
 email: "ken@invalidlogic.com"
 
-# --server --auto
-server: true
-auto: true
-
-# default './_site'
-destination: './_site'
-
 # turn on pygment syntax highlighting
 pygments: true
 
