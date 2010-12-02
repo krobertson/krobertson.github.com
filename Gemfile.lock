@@ -13,19 +13,14 @@ GEM
     liquid (2.2.2)
     maruku (0.6.0)
       syntax (>= 1.0.0)
-    pygments (0.0.1.a)
     rack (1.2.1)
     rack-jekyll (0.3.5)
       jekyll
       rack
-    rdiscount (1.6.5)
     syntax (1.0.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  jekyll
-  pygments (= 0.0.1.a)
   rack-jekyll
-  rdiscount
