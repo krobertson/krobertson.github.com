@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 181
+layout: post
+title: Qgyen.AllCommentRss for CS v2.1 RC1
+wordpress_url: /archive/qgyen-allcommentrss-for-cs-v2-1-rc1/
+---
+
+<h3>Qgyen.AllCommentRss v1.0.60804</h3>  <p><a href="http://www.tankete.com/core/blogs/jose_lema/default.aspx">Jose</a> had previously mentioned the <a href="http://www.tankete.com/core/blogs/jose_lema/archive/2006/07/28/Community-Server-Contest-II.aspx">Community Server Code Contest II</a> on his blog, and after talking to <a href="http://www.scottwater.com/">ScottW</a>, he said it was ok for me to post my contest entry.</p>  <p>My contest entry was a secure RSS feed of all of the comments within a certain blog, no matter which post the comment is too.  It also provides information like if it is an actual comment or a trackback, the post&#39;s name, URL, if it is approved, and then it gives quick links to approve/disapprove, view, or delete the comment.</p>  <p>I&#39;ve been using the module on my own site for a while now and love it.  The point is that I don&#39;t use the email notifications in CS regularly (it doesn&#39;t go to my telligent box, and I don&#39;t like non-work stuff there a whole lot), but I do use my RSS reader throughout the day, so I would easily notice new posts there.  I can also quickly view the comments and delete the spam.</p>  <p><strong><a href="http://qgyen.net/r.ashx?3">Download</a></strong> <em>(Requires on Community Server v2.1 RC1 and newer)</em></p>  <p><img src="http://qgyen.net/utility/images/securerss.gif" alt="" align="right" />The download includes the source, as well as instructions on how to do a quick xcopy install of it.  One you enable Secure Syndication on your site, the &quot;RSS Available&quot; button with a picture of a lock will show up on the Review Comments page in the Control Panel, which is a link to the RSS feed.</p>
+         

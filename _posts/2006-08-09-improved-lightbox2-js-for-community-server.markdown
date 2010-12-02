@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 184
+layout: post
+title: Improved Lightbox2 JS for Community Server
+wordpress_url: /archive/improved-lightbox2-js-for-community-server/
+---
+
+<h3>Qgyen.Lightbox v2.0.60809</h3>    <p>A while ago, I&#39;d released my <a href="http://qgyen.net/archive/2006/07/12/Lightbox2-JS-for-Community-Server.aspx">Lightbox2 JS module for Community Server</a>.&nbsp; One of the difficulties people have in using though is that it requires you to either set of disable this cache location, but it uses a custom configuration section in the web.config.&nbsp; The problem with this is that custom configuration sections are not allowed under a stock medium trust configuration, which you&#39;ll find on most webhosts.&nbsp; While <a href="http://qgyen.net/archive/2006/08/09/Scott_2700_s-Flickr-for-Community-Server-_2800_Updated_2900_.aspx">updating Scott&#39;s Flickr for Community Server module</a> to be compatible with my module, I noticed that he coded it to use a &lt;Flickr /&gt; section in the communityserver.org to set those values, bypassing the need for the web.config configuration section.&nbsp; So, I&#39;ve updated the Flickr Lightbox module to support reading the cache configuration values from the same location.<br /></p>      <p><a href="http://qgyen.net/r.ashx?5">Download here</a></p>      <p>If you are on a web host, I&#39;d recommend using the communityserver.config to configure the module.&nbsp; At the bare minimum, I&#39;d recommend adding this piece inside the root element:</p><p>&nbsp;&nbsp;&nbsp; &lt;Flickr disableCache=&quot;true&quot; /&gt;&nbsp;</p><p>This will disable the FlickrNet module from caching any data and causing any errors.&nbsp; If you do want it to be able to cache, you could set the location for it using this inside the root CommunityServer element:</p><p>&nbsp;&nbsp;&nbsp; &lt;Flickr disableCache=&quot;false&quot; cacheLocation=&quot;e:\path\to\folder&quot; /&gt;</p>
+         

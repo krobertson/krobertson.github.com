@@ -1,0 +1,10 @@
+--- 
+wordpress_id: 96
+layout: post
+title: In Dallas
+wordpress_url: /archive/in-dallas/
+---
+
+<p>Hanging out in the C# conference room.&nbsp; Got Jose, Ben, James, Dan, ScottW off to the side, and Rob's feet.</p>
+<p><a href="http://test.qgyen.net/attachment/1429.ashx"><img height=240 src="http://test.qgyen.net/attachment/1429.ashx" width=320 /></a></p>
+         

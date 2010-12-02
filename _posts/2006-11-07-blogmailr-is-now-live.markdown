@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 225
+layout: post
+title: BlogMailr is now live!
+wordpress_url: /archive/blogmailr-is-now-live/
+---
+
+                     <div class="Section1">  <p class="MsoNormal">Yes, BlogMailr is now live!&nbsp; Check it out for yourself at <a href="http://www.blogmailr.com/">blogmailr.com</a>.</p>    <p class="MsoNormal">So what is BlogMailr?&nbsp; It is an email-to-blog service for everybody.&nbsp; No matter what your software is, where it is hosted, or if your software supports it out of the box.&nbsp; If your blog supports posting tools like Windows Live Writer or BlogJet, BlogMailr will work for you.&nbsp; Enter in a little bit of information, such as where your site is, and the username/password, and it will automatically detect all of the necessary settings.&nbsp; You&rsquo;re then good to go.&nbsp; No software to install, just use what you probably already know inside and out (your email client).</p>    <p class="MsoNormal">What&rsquo;s better?&nbsp; Post from anywhere.&nbsp; Use your desktop, laptop while on a plane, cell phone, anything that can send an email.&nbsp; Send pictures through your phone, or inline messages in your email, it supports both of them.&nbsp; Include tags.&nbsp; What&rsquo;s best is that it works off of the user&rsquo;s email client&rsquo;s features.&nbsp; Most email clients support rich text, inline images, spell checking, drafts, and much more.&nbsp; Now, all of those are available to your blogging as well.</p>    <p class="MsoNormal">I&rsquo;ll probably post more details about BlogMailr in the next couple of days, but for now, get on over there and check it out.&nbsp; See <a href="http://www.blogmailr.com/how-it-works/">how it works</a> for more info.</p>  </div>    <p>Published with <a href="http://www.blogmailr.com/">BlogMailr</a></p>
+         

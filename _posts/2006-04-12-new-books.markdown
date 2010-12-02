@@ -1,0 +1,21 @@
+--- 
+wordpress_id: 132
+layout: post
+title: New books!
+wordpress_url: /archive/new-books/
+---
+
+<p>Now that I am fully recovered from my birthday cold, thought I'd post some new reading I've got ahead of me.</p>
+
+<p><a href="http://www.amazon.com/exec/obidos/redirect?path=ASIN/0142000280&amp;link_code=as2&amp;camp=1789&amp;tag=qgyennet-20&amp;creative=9325" title = "Getting Things Done"><img src="http://images.amazon.com/images/P/0142000280.01._AA_SCTZZZZZZZ_.jpg" hspace="5" border ="0"></a><br />
+I've been wanting to read GTD for a while, and finally got it.  It is the first book on my list to read.  Just barely started on it, but so far looks really interesting.</p>
+
+<p><a href="http://www.amazon.com/exec/obidos/redirect?path=ASIN/1591840767&amp;link_code=as2&amp;camp=1789&amp;tag=qgyennet-20&amp;creative=9325" title = "Think Big, Act Small"><img src="http://images.amazon.com/images/P/1591840767.01._AA_SCTZZZZZZZ_.jpg" hspace="5" border ="0"></a><br />
+Think Big, Act Small is a book that I read about a while ago on <a href="http://scottwater.com/blog/archive/2005/09/18/Think_Big_Act_Small.aspx">Scott's blog a while ago</a> and it had been on my To-Get list.</p>
+
+<p><a href="http://www.amazon.com/exec/obidos/redirect?path=ASIN/039332639X&amp;link_code=as2&amp;camp=1789&amp;tag=qgyennet-20&amp;creative=9325" title = "The Random Walk Guide to Investing"><img src="http://images.amazon.com/images/P/039332639X.01._AA_SCTZZZZZZZ_.jpg" hspace="5" border ="0"></a><br />
+This book was actually recommended by my Grandfather.  In his younger years (and still now), he was heavy into investing.  He'd read this book and liked it, so he has been recommending it to all his grandchildren, trying to get them to read it.</p>
+
+<p><a href="http://www.amazon.com/exec/obidos/redirect?path=ASIN/1573222976&amp;link_code=as2&amp;camp=1789&amp;tag=qgyennet-20&amp;creative=9325" title = "The Money Book for the Young, Fabulous &amp; Broke"><img src="http://images.amazon.com/images/P/1573222976.01._AA_SCTZZZZZZZ_.jpg" hspace="5" border ="0"></a><br />
+My mom loves Suze Orman and is also always trying to pass on financial knowledge to me.  She'd heard this book was pretty good, so she got it for me.  Should be good, since I am interested in investing and I like money (who doesn't, it pays the bills).</p>
+         

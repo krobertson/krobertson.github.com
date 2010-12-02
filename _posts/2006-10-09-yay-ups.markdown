@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 209
+layout: post
+title: Yay, UPS!
+wordpress_url: /archive/yay-ups/
+---
+
+<p>Hooray for UPS's quality service!</p> <p>Today, I received a nice, new <a href="http://www.codesmithtools.com/">CodeSmith Tools</a> T-shirt from the Telligent office.&nbsp; The odd thing is that it was shipped on June 12th, arrived here on June 19th, and has been sitting in the front office of the apartment complex for almost 4 months.</p> <p>The cause?&nbsp; Laziness.&nbsp; Laziness of the UPS driver to actually come and drop it off at my doorstep, or to leave any sort of notice that the package is waiting for me (either on my door or in my mailbox).&nbsp; And laziness of the front office people to take 4 months to finally say "hey, this guy hasn't picked this up yet, maybe we should tell him he has a package here".</p>
+         

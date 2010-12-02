@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 263
+layout: post
+title: Announcement
+wordpress_url: /archive/announcement/
+---
+
+<p>Saturday morning, my wife came into my office with a little present.&nbsp; She said she was unpacking and had found this gift for me.&nbsp; I remarked that it was yet another one she had misplaced (she had hidden one of my xmas gifts and then forgot where she hid for a few days).&nbsp; When I opened it, I looked at it thinking that it wasn&#39;t for me, it was for her cousin Crystal... it was a blue burp rag for a baby... her cousin just had a baby boy and we still had a gift we needed to give to them.&nbsp; Trish then turned it over and I saw it was this:</p> <p align="center"><a title="Photo Sharing" href="http://www.flickr.com/photos/qgyen/381137831/"><img height="160" alt="Surprise I got this weekend" src="http://farm1.static.flickr.com/161/381137831_0526158a37_m.jpg" width="240" border="0" /></a></p> <p>She then said &quot;I&#39;m pregnant!&quot;</p> <p>Yeah!&nbsp; My boys can swim!&nbsp; Needless to say, we are both absolutely estatic.&nbsp; We&#39;ve been wanting kids for a while, and now the time has finally come.</p> <p>So our weekend was quite busy with telling everybody.&nbsp; Today, my wife had a doctors appointment and we confirmed the pregnancy with a blood test.&nbsp; She already a regular appointment scheduled, so was perfect timing to get in there right away and confirm it.&nbsp; At this point, it is really too early to know what her due date is, as we couldn&#39;t even find it on the ultrasound.&nbsp; Apparently the home pregnancy tests these days are pretty damn accurrate.&nbsp; But the tests show that everything is normal.</p> <p>Was maybe kind of cruel of me to make other posts last night and today, not announcing the pregnancy, but I was hoping to know a due date after the appointment today, but no luck just yet.</p> <p>But it is official... in 9 months time, I will be a dad.</p>
+         

@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 216
+layout: post
+title: This &quot;2.0&quot; business has gone too far
+wordpress_url: /archive/this-quot-2-0-quot-business-gone-too-far/
+---
+
+<p>It is that time of the year... election season.&nbsp; When we are bombarded with an endless stream of political advertisements that make us want to poke our eyes our.</p> <p>I think the local government guys often times get a little bit more creative.&nbsp; They aren&#39;t noticed as much, so they have to do things to stand out a little more.&nbsp; With the mail today came this flyer for this guy Patrick Hume, running for <a href="http://www.elkgrovecity.org/">Elk Grove City Council</a>.&nbsp; In big, bold letters it said &quot;<strong>Elk Grove City Council: Leadership 2.0</strong>&quot;.&nbsp; I instantly rolled my eyes... now politics is making a play on the &quot;Web 2.0&quot; buzzword.</p> <p>Our of sheer curiosity, I decide to flip it open to read something to the tune of: (I threw it out, so going from memory)</p> <blockquote> <p>I have been a small business leader for the past X years.&nbsp; Over that time, I&#39;ve learned two important lessons: to change with the times, but to not forget the fundamentals.</p> <p>Our City Council has failed on both of these.&nbsp; I&nbsp;represent new leadership.&nbsp; Leadership 2.0.</p></blockquote> <p>[speechless]</p> <p><img align="right" height="120" src="http://qgyen.net/images/This2.0businessgonetoofar_FCDA/hotpad_thumb5.jpg" width="108" />I do have to hand it to his campaign crew though... they are creative.&nbsp; While it may make me roll my eyes, it is fairly creative.&nbsp; And he&nbsp; has some pretty good tactics.&nbsp; A couple of days ago, we get some mail from his campaign.&nbsp; It is a letter that is supposedly from his mother urging people to vote for her son.&nbsp; It even included a free hotpad!</p>
+         

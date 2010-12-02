@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 327
+layout: post
+title: Up close with Bobblehead Rob
+wordpress_url: /archive/up-close-with-bobblehead-rob/
+---
+
+<p>Last week, <a href="http://theblackfin.com/">Tom Edwards</a>, the VP of Xbox Playing (ok, really Sales and Marketing), unveiled his latest creation.&nbsp; He first brought us <a href="http://theblackfin.com/archive/2007/06/02/fun-on-a-friday-rob-howards-evil-clone.aspx">Carboard Rob</a>, and now he has brought us <a href="http://theblackfin.com/archive/2007/08/24/fun-on-a-friday-part-2-meet-bobblehead-rob.aspx">Bobblehead Rob</a>.&nbsp; Rob (the real one) came into his office to find ~60 bobbleheads on his desk made in his likeness.&nbsp; A bobblehead was sent out to everyone within Telligent, and the ones that are left over are slowly <a href="http://cgi.ebay.com/ws/eBayISAPI.dll?ViewItem&amp;item=180155140327">showing up on Ebay</a>.</p> <div align="center"><a href='http://static.flickr.com/1377/1294966801_31b3667359_b.jpg' title='Rob Howard Bobble Head 3' details='http://www.flickr.com/photos/99026274@N00/1294966801/' detailsText='Flickr page' rel='lightbox[bobblerob]'><img src='http://static.flickr.com/1377/1294966801_31b3667359_m.jpg' border='0' class=''></a> <a href='http://static.flickr.com/1023/1295839840_8b1a46f249_b.jpg' title='Rob Howard Bobble Head 2' details='http://www.flickr.com/photos/99026274@N00/1295839840/' detailsText='Flickr page' rel='lightbox[bobblerob]'><img src='http://static.flickr.com/1023/1295839840_8b1a46f249_m.jpg' border='0' class=''></a></div>  <div align="center"><a href='http://static.flickr.com/1352/1295845334_3811986770_b.jpg' title='Rob Howard Bobble Head 1' details='http://www.flickr.com/photos/99026274@N00/1295845334/' detailsText='Flickr page' rel='lightbox[bobblerob]'><img src='http://static.flickr.com/1352/1295845334_3811986770_m.jpg' border='0' class=''></a></div>
+         

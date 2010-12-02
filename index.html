@@ -1,0 +1,20 @@
+---
+layout: default
+title: Home
+---
+{% for post in site.posts limit:8 %}
+  <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+
+  <div class="main">
+    {{ post.content }}
+  </div>
+
+  <div class="meta group">
+    <div class="signature">
+      <p>{{ post.date | date: "%A, %B %d, %Y" }}</p>
+    </div>	
+    <div class="tags">
+      &nbsp;
+    </div>
+  </div>
+{%endfor %}

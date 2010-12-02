@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 296
+layout: post
+title: CS 2007 Beta2
+wordpress_url: /archive/cs-2007-beta2/
+---
+
+<p>Earlier today, we <a href="http://communityserver.org/blogs/announcements/archive/2007/03/22/community-server-2007-beta-2.aspx">posted CS 2007 Beta2</a>.&nbsp; Coming soon, the add-ons.</p> <p>Tomorrow, I think&nbsp;should also try and get some of those skins I&#39;ve done posted, and probably post my Lightbox module for CS 2007.&nbsp; Have been using it on here for about a week now with no problem.</p> <p>Anyway, long day, all I have time for right now.&nbsp; Between <a href="https://store.telligent.com/">work</a>, <a href="http://www.crackdownoncrime.com/">play</a>, and <a href="http://thegreenbutton.com/">relaxing</a>, I&#39;m tired (sorry, no link for tired).</p>
+         

@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 201
+layout: post
+title: Hot IDE
+wordpress_url: /archive/hot-ide/
+---
+
+Today, <a href="http://www.codinghorror.com/blog/">Jeff Atwood</a> posted the <a href="http://www.codinghorror.com/blog/archives/000682.html">Fonts and Colors settings file</a> for his Visual Studio color scheme, and I have to say, I love it!&nbsp; After seeing one of his <a href="http://www.codinghorror.com/blog/archives/000417.html">older posts</a> with a screenshot of his IDE, I'd started mimicking some of it, mostly the color of the line counter, background color, and selected text color. <p>One of the biggest improvements is simply the background color.&nbsp; Dropping it from full on white (255/255/255) to a slightly lighter shade (248/248/248) makes a world of difference.&nbsp; The harsh contrast takes away so much.&nbsp; The more subdued colors make it easier to look at and far&nbsp;less straining on the eyes.</p> <p>I've learned the hard way how not fun it is to over strain your eyes.&nbsp; A couple of years ago, was working in a poorly lit office, staring at a monolithic CRT monitor for hours a day, and it jacked me up.&nbsp; I had to stay completely off the computer for nearly 2-3 days.&nbsp; If I looked at a monitor, even just for 15 minutes, I'd get a raging headache right behind my eyes.&nbsp; Was very light sensitive, motion sensitive, and could not focus well (ie, reading even averaged size print).&nbsp; No real permanent damage, and I'm sure others have had worse, but certainly not something I want to repeat.&nbsp; Hence why I use LCDs now, have better lighting in my home office, take breaks about every hour or two, and love Jeff's color scheme.</p>
+         

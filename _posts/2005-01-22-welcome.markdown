@@ -1,0 +1,10 @@
+--- 
+wordpress_id: 5
+layout: post
+title: Welcome!
+wordpress_url: /archive/welcome/
+---
+
+<P>Welcome to my new blog!&nbsp; Finally got around to setup the blog on my site.&nbsp; Currently, I am using Community Server (a build between beta3 and the yet to be released RC1).&nbsp; I've also configured it to work in a single blog configuration, as opposed to its default multiple blog configuration.&nbsp; I've also got the gallery configured in the same manner.</P>
+<P>Soon, I'll be posting an article with some instructions on how to configure Community Server this way.</P>
+         

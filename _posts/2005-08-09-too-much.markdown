@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 45
+layout: post
+title: Too much!
+wordpress_url: /archive/too-much/
+---
+
+<P>Why ohh why did I ever let my inbox grow to over 900 messages?&nbsp; I'm normally fairly good about cleaning it out.&nbsp; Usually, once a week, I sort everything into subfolders and delete all the quick little ones that don't need to be saved.&nbsp; But recently, I haven't been keeping up on this habit.&nbsp; The problem is, slip on it one week, and the next week you're like "ugh, I don't want to that now... there are a bunch of them... it'll take forever" so then you let it slide a few more weeks and that is where I am today.</P>
+         

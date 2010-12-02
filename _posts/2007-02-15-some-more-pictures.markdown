@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 272
+layout: post
+title: Some more pictures
+wordpress_url: /archive/some-more-pictures/
+---
+
+<p>Thought I&#39;d post a few more pictures, since I was going through some from a couple of weeks ago and saw a number of ones that I liked.</p> <p><a title="Photo Sharing" href="http://www.flickr.com/photos/qgyen/391294045/"><img class="floatright" height="160" alt="My sister, chatting away" src="http://farm1.static.flickr.com/149/391294045_fc71b4973e_m.jpg" width="240" border="0" /></a>This is my sister.&nbsp; This was taken a few weeks ago at my parent&#39;s house when we were celebrating my sister&#39;s 22nd birthday.&nbsp; Actually, it was a group birthday between my sister, my cousin&#39;s fiancee, and my 2nd cousin (cousin&#39;s daughter).&nbsp; Group birthdays are big in my family, since we have a number of birthdays at the end of January/early February, a number in April (with one in March), and a few in December (within days of Christmas).&nbsp; Anyway, it is kind of funny how much like my mom my sister is.&nbsp; She <em>always</em> talks with her hands, though so do I.&nbsp; I think if you held her hands down, she couldn&#39;t talk.&nbsp; Hmm, have to remember that.</p> <p><a title="Photo Sharing" href="http://www.flickr.com/photos/qgyen/391294047/"><img class="floatleft" height="160" alt="My grandfather" src="http://farm1.static.flickr.com/162/391294047_07d3b797ef_m.jpg" width="240" border="0" /></a>This here is my grandfather.&nbsp; He is 88 years old (I believe, might actually be 89).&nbsp; He is the Italian in the family (hence my mom&#39;s maiden name of Galetto), so we all get the &quot;talking with own hands&quot; from him.&nbsp; He is originally from the Upper Peninsula in Michigan, known as the Keweenaw, or to him, Copper Country.&nbsp; Slowly moved his way out to California working in the aerospace industry, eventually working at Lockheed Martin in the Bay Area.</p>
+         

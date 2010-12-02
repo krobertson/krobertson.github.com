@@ -1,0 +1,19 @@
+--- 
+wordpress_id: 393
+layout: post
+title: Latest Developments
+wordpress_url: /software/latest-developments/
+---
+
+<p>Been a little quiet lately, though wanted to catch up some on our latest developments in development.</p>
+
+<p>First, Telligent had <a href="http://communityserver.com/news/news-and-announcements/telligent-releases-newest-version-of-community-server-2008/">its release</a> of Community Server 2008.5 and Community Server Evolution 1.0.  I had been working on Evolution and it is a very nice product.  Think about a community brought inside the firewall.  Telligent <a href="http://telligent.com/news-and-events/news/intel-capital-to-acquire-20-million-stake-in-telligent/">also announced</a> raising $20 million from Intel Capital, which I'm sure is already being put to good use with out recent releases.</p>
+
+<p>Second, my son Nick has been developing quite well.  This past weekend, he had his first birthday (<a href="http://telligent.com/news-and-events/news/intel-capital-to-acquire-20-million-stake-in-telligent/">pic</a>)!  He is now 31" long and 25 lbs, sporting above averages in weight, height, and head size (big brain in there!).  He is on the verge of walking on his own.  He just needs to get his confidence up when standing by himself.  He can do it, but when he realizes nothing is supporting him, he freaks out.  Recently he had his first fever... don't ask me how we went 11.5 months without a fever, but then he gets two a week apart from each other.</p>
+
+<p>And finally, been doing a lot of hobby development lately and has been quite fun.  I'd gotten into a new MMO, <a href="http://eve-online.com/">Eve Online</a>.  At first, I wasn't really digging its style too much, but gave it some time and it grew on me.  I finally got hooked when I started working with the <a href="http://wiki.eve-id.net/">EVE API</a> and <a href="http://eve-central.com/">Eve-Central</a>.  Since then, I've been working on analytical apps for the economic aspect of the game.  Tools for comparing market price vs build price of goods, to find the most profitable items, market movement guestimators to track what sells and in what location, regional comparisons to find where something sells best.  And recently, was making a sales tracker to focus on my own sales... things like which locations are best, which products sell best, best days of the week or hours of the day, etc.  What can I say, I'm a data geek.</p>
+
+<p>Probably the reason I like it is because I'm just developing for myself.  Since the game is one big universe, sharing the tools gives others my advantage, so people tend to protect their most valuable information.  But in writing for myself, can play with Ruby, Merb, and DataMapper more and get to what I want to do faster than worrying about all the other fluff.  User registration?  Bah.  Security?  Running localhost.  UI?  Rather plain.  Menus?  URLs.  Some of it I likely will release at some point... the tool for graphing your own sales information would be useful to others, and can share it without losing competitive advantage.  But it'll be a little while for me to refine it enough.</p>
+
+<p>Though I did recently start getting back into some of my main projects.  Can only write so much for yourself until you want to want something you can release/share!  Over the weekend, made some updates to <a href="http://github.com/krobertson/dm-paperclip/tree/master">DM-Paperclip</a> to make it compatible with Edge DataMapper, and also updated it to Edge Paperclip, posting <a href="http://rubyforge.org/projects/dm-paperclip">v2.1.4</a>.  This week, I was also going to take a look at <a href="http://github.com/krobertson/dm-dbslayer/tree/master">DM-DBSlayer</a> to make sure it was Edge DataMapper compatible.  Also have been sitting on some Merb-related contributions I was going to polish off and submit (think I had one for merb-auth, and merb-cache).</p>
+         

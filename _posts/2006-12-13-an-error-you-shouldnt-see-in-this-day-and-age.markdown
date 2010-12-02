@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 249
+layout: post
+title: An error you shouldn't see in this day and age
+wordpress_url: /archive/an-error-you-shouldn-t-see-in-this-day-and-age/
+---
+
+<p>Here is one way to instantly get your software knocked of my list of programs I use...</p> <p>Last night, I was going to check out a free schematic and PCB design program I'd heard about called <a href="http://www.winqcad.com/">WinQcad</a>.&nbsp; My usual process for testing out some new software is to first install it in a virtual machine under Windows XP just to see whether or not I like.&nbsp; Then I will&nbsp;sometimes install it under a Vista virtual machine to make sure it is compatible (it compatibility is in question).&nbsp; Then if I like it, and it works on Vista, I install it on my actual PC.</p> <p>So last night, I go to install WinQcad on my XP virtual machine.&nbsp; By default, it wants to install to C:\WinQcad.&nbsp; No thanks, I prefer to not put programs in the root... I prefer the Program Files folder.&nbsp; So I change it to "C:\Program Files\WinQcad".&nbsp; It installs fine, but then when I go to run it, I get this little message:</p> <p align="center"><img style="border-right:0px;border-top:0px;border-left:0px;border-bottom:0px;" height="146" src="http://qgyen.net/blogs/blog/WindowsLiveWriter/Anerroryoushouldntseeinthisdayandage_B467/blank_character%5B4%5D.png" width="353" border="0"> </p> <p>This is absolutely ridiculous.&nbsp; First of all, spaces in file names and folder names has been common place since Windows 95.&nbsp; Even more, the Program Files is widely considered the default install location, and has been since it came about in Windows 95.&nbsp; That was <strong>11 years ago</strong>.&nbsp; Come on!&nbsp; If you haven't taken the time to updated your application to work with commonly accepted norm that is 11 years old, why should I take the time to even try out your software?</p>
+         

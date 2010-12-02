@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 82
+layout: post
+title: BlogJet v1.6.2
+wordpress_url: /archive/blogjet-v1-6-2/
+---
+
+<p><a href="http://blogjet.com/">BlogJet</a> v1.6.2 was released mid-last month.&nbsp; I just finally found out about it today.&nbsp; It has a fix for display duplicate category entries for Community Server, .Text, and dasBlog.&nbsp; That was driving me nuts a while ago when I was digging through the code in CS to figure out why it had duplicates, only to come up completely dry.&nbsp; Very glad to find it was fixed though!</p>
+         

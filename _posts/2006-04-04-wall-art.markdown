@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 129
+layout: post
+title: Wall Art
+wordpress_url: /archive/wall-art/
+---
+
+<p>Sometimes it is awesome what kind of things you can find with just a few random clicks.  This morning, after browsing a news website and clicking on a link here and there, I ended up finding this company called <a href="http://www.whatisblik.com/">Blik</a> who specializes in wall decals.  They got some pretty cool stuff for <a href="http://www.whatisblik.com/blikids.html">kids</a>, <a href="http://www.whatisblik.com/Merchant2/merchant.mvc?Screen=PROD&amp;Store_Code=B&amp;Product_Code=BL-106A">geeks</a>, and <a href="http://www.whatisblik.com/Merchant2/merchant.mvc?Screen=PROD&amp;Store_Code=B&amp;Product_Code=WF-500-FL2">modern enthusiast</a>.  Think I am definitely going to have to get some of their stuff once we buy a house and I get to decorate my office.</p>
+         

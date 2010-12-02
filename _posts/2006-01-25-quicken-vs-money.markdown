@@ -1,0 +1,14 @@
+--- 
+wordpress_id: 75
+layout: post
+title: Quicken vs. Money
+wordpress_url: /archive/quicken-vs-money/
+---
+
+<p>One of my new years resolutions has been to keep more up to date on managing my finances, since all too often I fall behind on entering transactions.&nbsp; So far, I have been doing really well.&nbsp; Since we are wanting to buy a house this summer and are starting to think more of the future, been looking into using the tracking software for more than just entering transactions, keeping track of balances, and having a basic budget.&nbsp; The problem is that I keep going back and forth between whether to use Money or Quicken.&nbsp; I already have Money 2005, but sometimes find it lacking, so I&rsquo;m now looking at possibly switching to Quicken 2006, but not sure if it will suit all my needs either.</p>
+<p>Quicken&rsquo;s Pros: Detailed categories, such as breaking down &ldquo;Auto&rdquo; expenses to Fuel, Loans, Service, or Registration.&nbsp; This is big for things like tracking yearly auto/home expenses.&nbsp; Has nice detailed forms for paychecks with income/tax info.&nbsp; Allows attachments for printed paycheck stubs and such.</p>
+<p>Quicken&rsquo;s Cons: Its budgeting system simply uses rough estimates, rather than being able to have line item budgeted expenses for each category.&nbsp; It doesn&rsquo;t look like you can reallocate your budget, ie, borrow amounts from the previous month or another category.&nbsp; Say you eat at home more than dining out, so you can barrow from the dining out category for the grocery category and not go over budget at all.&nbsp; Some of the reports are not very intuitive, especially when wanting to access additional information (ie, transactions for a category).&nbsp; Sometimes, in the one line register, the little button toolbar for &ldquo;enter, split, etc&rdquo; covers the previous transaction amount, which I might want to look at.</p>
+<p>Money&rsquo;s Pros: It has the kind of detailed budgeting system where you can include individual bills.&nbsp; It allows you to reallocate your budget around between categories or months.&nbsp; Its reports feel a little more intuitive as you dive in to get additional information.&nbsp; Its register is nicely laid out, easy to navigate.</p>
+<p>Money&rsquo;s Cons: Signing in to Passport to access your finances?&nbsp; Why?&nbsp; Doesn&rsquo;t support a more detailed category system where you can have sub-categories, such as Automobile:Fuel.&nbsp; You can create a category named &ldquo;Automobile-Fuel&rdquo; and set it as an Automobile Expense, but not sure if it is quite the same.</p>
+<p>I think I am leaning towards sticking with Money, since seems to have a slightly more customisable interface (more in terms of layout and what not), the more logical register, and the budget system is big to me.&nbsp; It may just take a little bit of work to get some things like the categories or the interface how I want them.</p>
+         

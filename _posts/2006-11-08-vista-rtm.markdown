@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 227
+layout: post
+title: Vista RTM!
+wordpress_url: /archive/vista-rtm/
+---
+
+<p>Come back from lunch and find out that <a href="http://windowsvistablog.com/blogs/windowsvista/archive/2006/11/08/it-s-time.aspx">Vista has apparently RTM'd</a>.&nbsp; Good stuff!</p> <p>I've been using Vista RC2 for about 3 weeks now and love it.&nbsp; I've been meaning to do a nice write up on it.&nbsp; Have had some issues with it, but none are caused by Vista itself... they're all from other applications lack of compatibility.&nbsp; Going to write more, but if you want to name names: TortoiseSVN and Outlook 2007.&nbsp; Those two programs are the source of all my frustration.</p> <p>Hopefully now with Vista RTMing, some companies will <a href="http://forums.primopdf.com/showthread.php?t=815">get off their butts and make their stuff compatible</a>.&nbsp; I mean, with over a year of betas, CTPs, and RCs... not like they've had time to update their software.&nbsp; (That was sarcasm.)</p>
+         

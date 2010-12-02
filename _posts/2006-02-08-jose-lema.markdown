@@ -1,0 +1,10 @@
+--- 
+wordpress_id: 89
+layout: post
+title: Jose Lema
+wordpress_url: /archive/jose-lema/
+---
+
+At the first California Community Server/Telligent meetup.<br />
+<img src="http://test.qgyen.net/attachment/1402.ashx" width="320" height="240" />
+         

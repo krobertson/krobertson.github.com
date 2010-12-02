@@ -1,0 +1,17 @@
+--- 
+wordpress_id: 553
+layout: post
+title: Isms
+wordpress_url: http://invalidlogic.com/?p=553
+---
+Last week, I gave a presentation at the SacRuby meetup on using Twilio with Sinatra.
+
+Someone, I believe it was <a href="http://code.jeremyevans.net/">Jeremy Evans</a> (author of the <a href="http://sequel.rubyforge.org/">Sequel ORM</a>) asked me why I was using exclusive returns at the end of my methods (<a href="http://github.com/krobertson/kens-twilio-resume/blob/master/resume.rb#L46">code in question</a>).  It had never occurred to me and I had just answered with no reason.
+
+While going over the video of the presentation, came across his question again and was thinking about it.  I realized it is still a .NET-ism that I'm carrying.  In Ruby, you don't need to explicitly return at the end of a method.  The result of the last command will automatically be returned.  However in .NET, everything has to be an explicit return.
+
+When working with multiple languages, it is interesting to see the idioms cross over.  There have been multiple times I've been in C# and started typing "return ... if ..." or something similar.  Much the same, I'm so used to explicit returns in C# that I've used them in Ruby where I didn't really need to.
+
+It is important to be aware of the "isms" that influence you.  When moving into a new language, often times they are visible to others more familiar with the language, and more importantly, can shield you from other techniques the language offers.  While many are innocent, awareness is important to help you continue to grow.
+
+However when "isms" cross back to a language you already know, they offer a chance to gain new perspective on methodologies you already practice and a might offer an opportunity to pose the question "how can I make this better".

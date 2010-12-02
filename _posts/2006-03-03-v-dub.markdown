@@ -1,0 +1,11 @@
+--- 
+wordpress_id: 103
+layout: post
+title: V-Dub
+wordpress_url: /archive/v-dub/
+---
+
+<p>You got to love Volkswagon for their <a href="http://blogs.smugmug.com/onethumb/2006/02/25/best-commercials-ever/">latest set of commercials</a>... instantly recognized <a href="http://www.imdb.com/name/nm0001780/">Peter Stormare</a>, the Russian guy from <a href="http://www.imdb.com/title/tt0120591/">Armageddon</a>.</p>
+
+<p>Side note: Its a small world... found this through <a href="http://shahine.com/omar/">Omar Shahine's blog</a>, who linked to <a href="http://blogs.smugmug.com/onethumb/">Don MacAskill's blog</a>, who used to work at <a href="http://web.archive.org/web/19970331203103/http://www.best.com/index.html">Best Internet</a>, who used to be my ISP (like '96-99ish).  Recognized his nickname, onethumb.</p>
+         

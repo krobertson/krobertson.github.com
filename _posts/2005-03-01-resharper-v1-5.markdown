@@ -1,0 +1,10 @@
+--- 
+wordpress_id: 14
+layout: post
+title: ReSharper v1.5
+wordpress_url: /archive/resharper-v1-5/
+---
+
+<p>When the heck did <a href="http://www.jetbrains.com/resharper">ReSharper v1.5</a>&nbsp;come out?&nbsp; I was just lazily browsing their website and noticed that they had a v1.5.&nbsp; I just reinstalled my OS a few weeks ago, but a quick look and I still had v1.0.&nbsp; Doh!&nbsp; Anyway, got it setup and did some settings tweaking that I&rsquo;d been meaning to do.&nbsp; Yet to do any coding with it, but sure it a nice improvement over v1.0.</p>
+<p>I&rsquo;ve come to love ReSharper and wonder how I did things before it.&nbsp; Last week, I&rsquo;d done some work in Visual Studio 2005 B1 and so missing it.&nbsp; Just for the simple stuff like automatically adding using directives.&nbsp; Can&rsquo;t live without it.&nbsp; VS 2005&rsquo;s IntelliSense is much better than 2003, by default.&nbsp; And it does something that I wish ReSharper did (showing all your variable names and such just on a plain line), but I still need it. <img /></p>
+         

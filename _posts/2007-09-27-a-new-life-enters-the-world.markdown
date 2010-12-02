@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 330
+layout: post
+title: A new life enters the world
+wordpress_url: /archive/a-new-life-enters-the-world/
+---
+
+<p>Today had the fine pleasure of joining the ranks of dads around the world.&nbsp; This afternoon, my wife and I welcomed our baby son, Nicholas James Robertson, into the world.&nbsp; He was born at 12:47pm, weighing 7lbs and 15oz, and 19&quot; long.</p> <p>Mommy is recovering well.&nbsp; After trying to deliver naturally, we realized that Trish was going to have to go in for a c-section, since baby&#39;s head was pretty big and Trish is too petite.&nbsp; Trish is tired, but doing very well.&nbsp; I&#39;m pretty tired to, having been up over a day and a half straight.</p> <p>With that, see you all in two weeks!&nbsp; Will likely be around, but going to be rather quiet as hoping to spend some good time helping Trish and bonding with daddy&#39;s boy!</p> <div align="center"><a href='http://static.flickr.com/1025/1450655867_99acc0a4ec_b.jpg' title='Nicholas sleeping with mommy' details='http://www.flickr.com/photos/99026274@N00/1450655867/' detailsText='Flickr page' rel='lightbox[baby1st]'><img src='http://static.flickr.com/1025/1450655867_99acc0a4ec.jpg' border='0' class=''></a></div> <div align="center"><a href='http://static.flickr.com/1419/1451511190_c131aea80e_b.jpg' title='One-two punch!' details='http://www.flickr.com/photos/99026274@N00/1451511190/' detailsText='Flickr page' rel='lightbox[baby1st]'><img src='http://static.flickr.com/1419/1451511190_c131aea80e_m.jpg' border='0' class=''></a></div> <div align="center"><a href='http://static.flickr.com/1251/1451510688_31476c9878_b.jpg' title='A tired, but happy dad' details='http://www.flickr.com/photos/99026274@N00/1451510688/' detailsText='Flickr page' rel='lightbox[baby1st]'><img src='http://static.flickr.com/1251/1451510688_31476c9878_m.jpg' border='0' class=''></a></div>
+         

@@ -1,0 +1,9 @@
+--- 
+wordpress_id: 251
+layout: post
+title: Odd run in
+wordpress_url: /archive/odd-run-in/
+---
+
+<p>Had an odd happening when I went out to lunch today.&nbsp; I went to get a sandwich from Togo's, and this ensued...</p> <p>&nbsp;</p> <p>- Walk in and this guy who just finished paying recognizes me.</p> <p>Him: "Hey!&nbsp; How's it going?"</p> <p>- Puzzled, should I recognize him?</p> <p>Me: "Good, how are you?"</p> <p>Him: "Good.&nbsp; I think I have a package for you."</p> <p>- Package?</p> <p>Him: "334, right?"</p> <p>- At this point, I finally notice he is in a UPS uniform.&nbsp; Then it clicks, he is the UPS delivery guy!</p> <p>Me: "Cool!&nbsp; Will probably see you later!&nbsp; Merry Christmas!"</p> <p>&nbsp;</p> <p>Was a little thrown off at first... you wouldn't assume your UPS guy would recognize you if you casually ran into him.&nbsp; I was surprised.&nbsp; Anyway, I did have a package... it was my copy of <a href="http://www.amazon.com/Community-Server-Quickly-Administration-Customization/dp/1847190871/sr=8-1/qid=1166742570/ref=pd_bbs_sr_1/102-6487800-1034566?ie=UTF8&amp;s=books">Community Server Quickly</a>.&nbsp; Be posting more once I have a chance to dive into it.</p>
+         
