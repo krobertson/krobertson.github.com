@@ -17,6 +17,8 @@ GEM
     rack-jekyll (0.3.5)
       jekyll
       rack
+    rack-redirect (0.0.3)
+      rack
     syntax (1.0.0)
 
 PLATFORMS
@@ -24,3 +26,4 @@ PLATFORMS
 
 DEPENDENCIES
   rack-jekyll
+  rack-redirect
