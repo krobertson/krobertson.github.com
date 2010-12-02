@@ -25,6 +25,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  jekyll
   pygments (= 0.0.1.a)
   rack-jekyll
   rdiscount
