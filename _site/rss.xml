@@ -5,11 +5,27 @@
     <link>http://invalidlogic.com</link>
     <language>en</language>
     <webMaster>ken@invalidlogic.com (Ken Robertson)</webMaster>
-    <pubDate>2010-12-02T13:43:04-08:00</pubDate>
+    <pubDate>2010-12-08T10:12:27-08:00</pubDate>
     <copyright>Copyright 2009</copyright>
     <creativeCommons:license>http://creativecommons.org/licenses/by-nc-sa/3.0/</creativeCommons:license>
     <ttl>60</ttl>
     <description>Endlessly expanding technology</description>
+    
+    <item>
+      <title>Progress through iterating</title>
+      <link>http://invalidlogic.com/2010/12/08/progress-through-iterating/</link>
+      <pubDate>Wed Dec 08 00:00:00 -0800 2010</pubDate>
+      <guid>http://invalidlogic.com/archives/2010/12/08/progress-through-iterating/</guid>
+      <description>&lt;p&gt;It was a little over a year ago that I launched the public beta of Trunks, and when talking with a friend was looking back at all the revisions it has gone though.  Although its only been live a year, I've actually been working on the project for 3 years now and I'm on the 4th major revision of its codebase.&lt;/p&gt;
+
+&lt;p&gt;The projects that are most fulfilling long-term are those that you have a vested interest in.  Often times, they're beyond purely financial.  I have never gauged Trunk's success on its profits, rather it is an idea that I myself find value in, and believe others do as well.  That is why I've stuck with it over time.&lt;/p&gt;
+
+&lt;p&gt;Each major revision has addressed problem areas of the previous and has gotten incrementally better and more mature.  When looking back, can clearly see the problem points of the previous version and how they were addressed.  It is important to look back to see the path you've traveled.  Be aware of the mistake you've already addressed so as to not re-introduce them.  And if nothing else, feel proud of the investment you've made in the project and you own growth.&lt;/p&gt;
+
+&lt;p&gt;I had basically forgotten I'd been working on Trunks for 3 years.  After being reminded, was looking at it and thinking damn, its come a long way.&lt;/p&gt;
+</description>
+      <creativeCommons:license>http://creativecommons.org/licenses/by-nc-sa/3.0/</creativeCommons:license>
+    </item>
     
     <item>
       <title>Tool Enlightenment, Part 2</title>
@@ -263,37 +279,6 @@ Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for numb
 
 
 &lt;p&gt;Will maybe sometime look at email processing more, but email templates are often far simpler and their action methods do less loading.&lt;/p&gt;
-</description>
-      <creativeCommons:license>http://creativecommons.org/licenses/by-nc-sa/3.0/</creativeCommons:license>
-    </item>
-    
-    <item>
-      <title>Tracing Cache Money transactions through New Relic</title>
-      <link>http://invalidlogic.com/2010/06/15/tracing-cache-money-transactions-through-new-relic/</link>
-      <pubDate>Tue Jun 15 00:00:00 -0700 2010</pubDate>
-      <guid>http://invalidlogic.com/archives/2010/06/15/tracing-cache-money-transactions-through-new-relic/</guid>
-      <description>&lt;p&gt;At Involver, we've been starting to make heavy use of &lt;a href=&quot;http://newrelic.com/&quot;&gt;New Relic&lt;/a&gt; to start monitoring performance and track down bottlenecks.  I've been working to add method tracers around components that utilize external APIs or services, and some of the major components we leverage to know how much time is spent in various areas.&lt;/p&gt;
-
-&lt;p&gt;We use &lt;a href=&quot;http://github.com/nkallen/cache-money&quot;&gt;Cache Money&lt;/a&gt;, a gem that helps transparently cache models in Memcached.  Out of the box, New Relic supports tracing calls for Memcached, however on traces we'd see a long list of Memcached calls but no information as to which request they were associated with.&lt;/p&gt;
-
-&lt;p&gt;For a lot of our additional traces, we've added an rpm_extras.rb file.  To include tracing for Cache Money, just need to define it as follows:&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;lineno&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class_eval&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;2&lt;/span&gt;   &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;3&lt;/span&gt;     &lt;span class=&quot;n&quot;&gt;add_method_tracer&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Custom/CacheMoney/transaction&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;4&lt;/span&gt;     &lt;span class=&quot;n&quot;&gt;add_method_tracer&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:find_every&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Custom/CacheMoney/find_every&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;5&lt;/span&gt;     &lt;span class=&quot;n&quot;&gt;add_method_tracer&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:find_from_ids&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Custom/CacheMoney/find_from_ids&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;6&lt;/span&gt;   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;7&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-
-&lt;p&gt;New Relic itself uses add_method_tracer around transaction and find_by_sql, however Cache Money works by alias_method_chaining transaction, find_every, and find_from_ids.&lt;/p&gt;
-
-&lt;p&gt;One thing worth noting is that since both New Relic and Cache Money make use of transaction, order of loading could be important.  In our environment.rb, we load our rpm_extras.rb in the after_initialize block.  When RPM is loaded, it wraps the actual ActiveRecord#transaction call, then Cache Money chains it, and our own tracer wraps the chained call.&lt;/p&gt;
-
-&lt;p&gt;Initially, I tried putting the tracer around Cache Money's own transaction_with_cache_transaction, however that didn't show up in traces.&lt;/p&gt;
 </description>
       <creativeCommons:license>http://creativecommons.org/licenses/by-nc-sa/3.0/</creativeCommons:license>
     </item>

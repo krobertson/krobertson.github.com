@@ -24,6 +24,28 @@
 
     <div id="content" class="group">
       
+  <h2><a href="/2010/12/08/progress-through-iterating/">Progress through iterating</a></h2>
+
+  <div class="main">
+    <p>It was a little over a year ago that I launched the public beta of Trunks, and when talking with a friend was looking back at all the revisions it has gone though.  Although its only been live a year, I've actually been working on the project for 3 years now and I'm on the 4th major revision of its codebase.</p>
+
+<p>The projects that are most fulfilling long-term are those that you have a vested interest in.  Often times, they're beyond purely financial.  I have never gauged Trunk's success on its profits, rather it is an idea that I myself find value in, and believe others do as well.  That is why I've stuck with it over time.</p>
+
+<p>Each major revision has addressed problem areas of the previous and has gotten incrementally better and more mature.  When looking back, can clearly see the problem points of the previous version and how they were addressed.  It is important to look back to see the path you've traveled.  Be aware of the mistake you've already addressed so as to not re-introduce them.  And if nothing else, feel proud of the investment you've made in the project and you own growth.</p>
+
+<p>I had basically forgotten I'd been working on Trunks for 3 years.  After being reminded, was looking at it and thinking damn, its come a long way.</p>
+
+  </div>
+
+  <div class="meta group">
+    <div class="signature">
+      <p>Wednesday, December 08, 2010</p>
+    </div>	
+    <div class="tags">
+      &nbsp;
+    </div>
+  </div>
+
   <h2><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></h2>
 
   <div class="main">
@@ -234,56 +256,6 @@ Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for numb
     </div>
   </div>
 
-  <h2><a href="/2010/07/15/using-server-aliases-with-capistrano-output/">Using server aliases with Capistrano output</a></h2>
-
-  <div class="main">
-    <p>One thing we often run into without deploys is "what server is that executing on?"  After updating code, we actually a fairly elaborate process to remove servers from load balancing, restart, wait for load to drop off, then add it back in to load balancing.  We also just use the AWS hostnames rather than our own since our server list pretty much changes weekly.  Wouldn't it be nice to have the ouptut show "app10" instead of "ec2-123-123-123-123.compute-1.amazonaws.com".</p>
-
-<p>Luckily adding an alias to Capistrano is pretty easy!</p>
-
-<div class="highlight"><pre><code class="ruby"><span class="lineno"> 1</span> <span class="k">class</span> <span class="nc">Capistrano</span><span class="o">::</span><span class="no">ServerDefinition</span>
-<span class="lineno"> 2</span>   <span class="k">def</span> <span class="nf">to_s</span>
-<span class="lineno"> 3</span>     <span class="vi">@to_s</span> <span class="o">||=</span> <span class="k">begin</span>
-<span class="lineno"> 4</span>       <span class="n">s</span> <span class="o">=</span> <span class="vi">@options</span><span class="o">[</span><span class="ss">:alias</span><span class="o">]</span> <span class="o">||</span> <span class="n">host</span>
-<span class="lineno"> 5</span>       <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">user</span><span class="si">}</span><span class="s2">@</span><span class="si">#{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">user</span>
-<span class="lineno"> 6</span>       <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">s</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">port</span> <span class="o">&amp;&amp;</span> <span class="n">port</span> <span class="o">!=</span> <span class="mi">22</span>
-<span class="lineno"> 7</span>       <span class="n">s</span>
-<span class="lineno"> 8</span>     <span class="k">end</span>
-<span class="lineno"> 9</span>   <span class="k">end</span>
-<span class="lineno">10</span> <span class="k">end</span>
-</code></pre>
-</div>
-
-
-<p>Simply add that to your deploy.rb, or another file that is included with your recipes for utility methods.  It works simply by overriding the ServerDefinition.to_s method, which is used for the logger output.  The only change to the default method is line 4.</p>
-
-<p>Then for your role definitions:</p>
-
-<div class="highlight"><pre><code class="ruby"><span class="n">role</span> <span class="ss">:app</span><span class="p">,</span> <span class="s1">&#39;ec2-123-123-123-123.compute-1.amazonaws.com&#39;</span><span class="p">,</span> <span class="ss">:alias</span> <span class="o">=&gt;</span> <span class="s1">&#39;app10&#39;</span>
-</code></pre>
-</div>
-
-
-<p>Then you see much better output:</p>
-
-<div class="highlight"><pre><code class="text"> ** [out :: app10] Alive
-</code></pre>
-</div>
-
-
-
-
-  </div>
-
-  <div class="meta group">
-    <div class="signature">
-      <p>Thursday, July 15, 2010</p>
-    </div>	
-    <div class="tags">
-      &nbsp;
-    </div>
-  </div>
-
 
     </div>
 
@@ -312,6 +284,8 @@ Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for numb
       <h3>Recent Posts</h3>
       <ul>
         
+          <li><a href="/2010/12/08/progress-through-iterating/">Progress through iterating</a></li>
+        
           <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
         
           <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
@@ -319,8 +293,6 @@ Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for numb
           <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
         
           <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
-        
-          <li><a href="/2010/09/08/the-future-of-papercut/">The Future of Papercut</a></li>
         
     	</ul>
     </div>

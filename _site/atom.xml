@@ -5,13 +5,29 @@
  <link href="http://invalidlogic.com/atom.xml" rel="self"/>
  <link href="http://invalidlogic.com"/>
  <link rel="license" type="/application/rdf+xml" href="http://creativecommons.org/licenses/by-nc-sa/3.0/rdf" />
- <updated>2010-12-02T13:43:04-08:00</updated>
+ <updated>2010-12-08T10:12:27-08:00</updated>
  <id>http://invalidlogic.com</id>
  <author>
      <name>Ken Robertson</name>
      <email>ken@invalidlogic.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Progress through iterating</title>
+   <link href="http://invalidlogic.com//2010/12/08/progress-through-iterating/"/>
+   <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
+   <updated>2010-12-08T00:00:00-08:00</updated>
+   <id>http://invalidlogic.com//2010/12/08/progress-through-iterating</id>
+   <content type="html">&lt;p&gt;It was a little over a year ago that I launched the public beta of Trunks, and when talking with a friend was looking back at all the revisions it has gone though.  Although its only been live a year, I've actually been working on the project for 3 years now and I'm on the 4th major revision of its codebase.&lt;/p&gt;
+
+&lt;p&gt;The projects that are most fulfilling long-term are those that you have a vested interest in.  Often times, they're beyond purely financial.  I have never gauged Trunk's success on its profits, rather it is an idea that I myself find value in, and believe others do as well.  That is why I've stuck with it over time.&lt;/p&gt;
+
+&lt;p&gt;Each major revision has addressed problem areas of the previous and has gotten incrementally better and more mature.  When looking back, can clearly see the problem points of the previous version and how they were addressed.  It is important to look back to see the path you've traveled.  Be aware of the mistake you've already addressed so as to not re-introduce them.  And if nothing else, feel proud of the investment you've made in the project and you own growth.&lt;/p&gt;
+
+&lt;p&gt;I had basically forgotten I'd been working on Trunks for 3 years.  After being reminded, was looking at it and thinking damn, its come a long way.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Tool Enlightenment, Part 2</title>
@@ -368,30 +384,6 @@ Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for numb
 &lt;p&gt;I know I can be difficult for others to read at times, because I can be quite short and terse.  And I've certainly had encounters like Derek Sivers pointed out in his post with doing support.&lt;/p&gt;
 
 &lt;p&gt;Since reading that post, I've tried to remain more conscious of that when working with others.  But it is also important to keep it in mind when you receive emails, IMs, comments, or other messages.  It can be easier for them to come off the wrong way and you just need to realize it might not actually be meant how it sounds.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Where do your loyalties lay?</title>
-   <link href="http://invalidlogic.com//2010/04/11/where-do-your-loyalties-lay/"/>
-   <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
-   <updated>2010-04-11T00:00:00-07:00</updated>
-   <id>http://invalidlogic.com//2010/04/11/where-do-your-loyalties-lay</id>
-   <content type="html">&lt;p&gt;I've been reading through &lt;a href=&quot;http://www.amazon.com/gp/product/0307463745?ie=UTF8&amp;tag=qgyennet-20&amp;link_code=as3&amp;camp=211189&amp;creative=373489&amp;creativeASIN=0307463745&quot;&gt;Rework&lt;/a&gt; and enjoying it quite a bit.  They are quite vocal in their dislike of businesses thinking they need to take VC money, and especially in flipping businesses.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://divvyshot.com/&quot;&gt;Divvyshot&lt;/a&gt; just had their public release at the beginning of March, and barely a month later, they're now acquired by &lt;a href=&quot;http://www.facebook.com/&quot;&gt;Facebook&lt;/a&gt; and shutting down.  They recently announced their shutdown timeline and in 6 weeks, they will be done.  Of course, they're going to be working on new stuff at Facebook, but it does raise some interesting points.&lt;/p&gt;
-
-&lt;p&gt;They'd only been in open for a little over a year, and in business for a month (&quot;in business&quot; as in public and being a paid service...  making money like a business), and now they're acquired and shutting down.&lt;/p&gt;
-
-&lt;p&gt;Even if you aren't building a business with an exit strategy already set, where do your loyalties lay?  Is it in the service that you are building, or is it in the idea behind your service?  And which is better?&lt;/p&gt;
-
-&lt;p&gt;If your loyalties are to &lt;em&gt;your&lt;/em&gt; business and &lt;em&gt;your&lt;/em&gt; service, then the last thing you'd want to do would be to get acquired knowing you'll be shut down.  Even if you'll get to work on the same stuff again at the new job, you'll be starting over and abandoning what you've already built.&lt;/p&gt;
-
-&lt;p&gt;If your loyalties are with the idea, then it doesn't matter where you're working on it at.  Getting acquired by a company like Facebook give you more funding, more resources, and able to reach a larger audience.  However since the service you just built is secondary, you do end up screwing over the user base your &lt;em&gt;already reached&lt;/em&gt; in order to have a larger base of &lt;em&gt;potential&lt;/em&gt; users.&lt;/p&gt;
-
-&lt;p&gt;I tend to lean towards loyalties to your own business.  Flipping, especially so early on, only screws your users.  I can see the positive reasons the Divvyshot founders are likely looking at, however if I was a paid users, I'd likely be looking for a refund and have a bit of a foul taste in my mouth.&lt;/p&gt;
-
-&lt;p&gt;Aside from that... I don't really want all my photos within Facebook and likely won't consider using it once its in Facebook.  I don't believe in &quot;one service to rule them all&quot;.  I prefer services with a set focus.&lt;/p&gt;
 </content>
  </entry>
  
