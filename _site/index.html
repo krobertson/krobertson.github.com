@@ -24,6 +24,32 @@
 
     <div id="content" class="group">
       
+  <h2><a href="/2011/01/19/love-your-dependency-management/">Love your dependency management</a></h2>
+
+  <div class="main">
+    <p>Dependency management is a pain in the ass, but it doesn't have to be.</p>
+
+<p>Last month we went through a full migration of all of our systems to a new provider.  This is truly awesome to do when you have all your systems spec'd out and managed with chef, however it can also highlight those areas you might have been lazy or where you didn't enforce your chef specs enough.  We managed to catch a few places where a smaller satellite app had newer system gems installed and not documented in its readme or in our chef specs.</p>
+
+<p>Managing gems is one of those areas that you find varying opinions, but I've definitely fallen in love with <a href="http://gembundler.com">bundler</a> over the past year.  I use it on all my personal projects, but it becomes even more valuable when used within a team of developers.  Need to change a gem?  Just do it and notify everyone to run bundle install.  Often times, bundler will actually tell them they need to update if it sees changes.  Time to deploy your changes?  That is all you do... deploy them!</p>
+
+<p>Before, we had a mixture of vendored gems and system gems depending on whether some were using C extensions or needed to have system binaries.  But by moving these applications to use bundler, the only gem chef needs to install is bundler itself.</p>
+
+<p>The easing of the process for both sides is awesome... both for the devs and for operations.</p>
+
+<p>Tired of your own gem deploy or dependency management woes?  Take a look... wouldn't hurt.</p>
+
+  </div>
+
+  <div class="meta group">
+    <div class="signature">
+      <p>Wednesday, January 19, 2011</p>
+    </div>	
+    <div class="tags">
+      &nbsp;
+    </div>
+  </div>
+
   <h2><a href="/2010/12/08/progress-through-iterating/">Progress through iterating</a></h2>
 
   <div class="main">
@@ -230,32 +256,6 @@
     </div>
   </div>
 
-  <h2><a href="/2010/08/13/presenting-on-chef-at-next-sacruby-meetup/">Presenting on Chef at next SacRuby Meetup</a></h2>
-
-  <div class="main">
-    <p>If you are in the Sacramento area next Thursday, come by the SacRuby Meetup!  I will be presenting on using <a href="http://wiki.opscode.com/">Chef</a> for server and configuration management.  I will be talking about using Chef on a large scale with a cluster of servers, all the way down to aiding management of a single server.</p>
-
-<p>If you are in the area, please stop by!  Pizza and refreshments are normally available.</p>
-
-<blockquote>Meetup details: <a href="http://www.meetup.com/sacruby/calendar/14122667/">http://www.meetup.com/sacruby/calendar/14122667/</a>
-Date: Thursday, August 19th
-Time: 7:30pm til we go home
-Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for number to call to get building access)</blockquote>
-
-
-<p>The main talk starts at 7:30, however we will also have a Ruby Clinic starting at 6:30.  Bring your questions, problems, or other issues in and we'll try to help you out.</p>
-
-  </div>
-
-  <div class="meta group">
-    <div class="signature">
-      <p>Friday, August 13, 2010</p>
-    </div>	
-    <div class="tags">
-      &nbsp;
-    </div>
-  </div>
-
 
     </div>
 
@@ -284,6 +284,8 @@ Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for numb
       <h3>Recent Posts</h3>
       <ul>
         
+          <li><a href="/2011/01/19/love-your-dependency-management/">Love your dependency management</a></li>
+        
           <li><a href="/2010/12/08/progress-through-iterating/">Progress through iterating</a></li>
         
           <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
@@ -291,8 +293,6 @@ Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for numb
           <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
         
           <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
-        
-          <li><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></li>
         
     	</ul>
     </div>

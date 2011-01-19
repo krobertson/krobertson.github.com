@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Love your dependency management &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Love your dependency management</h2>
+
+<div class="main">
+  <p>Dependency management is a pain in the ass, but it doesn't have to be.</p>
+
+<p>Last month we went through a full migration of all of our systems to a new provider.  This is truly awesome to do when you have all your systems spec'd out and managed with chef, however it can also highlight those areas you might have been lazy or where you didn't enforce your chef specs enough.  We managed to catch a few places where a smaller satellite app had newer system gems installed and not documented in its readme or in our chef specs.</p>
+
+<p>Managing gems is one of those areas that you find varying opinions, but I've definitely fallen in love with <a href="http://gembundler.com">bundler</a> over the past year.  I use it on all my personal projects, but it becomes even more valuable when used within a team of developers.  Need to change a gem?  Just do it and notify everyone to run bundle install.  Often times, bundler will actually tell them they need to update if it sees changes.  Time to deploy your changes?  That is all you do... deploy them!</p>
+
+<p>Before, we had a mixture of vendored gems and system gems depending on whether some were using C extensions or needed to have system binaries.  But by moving these applications to use bundler, the only gem chef needs to install is bundler itself.</p>
+
+<p>The easing of the process for both sides is awesome... both for the devs and for operations.</p>
+
+<p>Tired of your own gem deploy or dependency management woes?  Take a look... wouldn't hurt.</p>
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Wednesday, January 19, 2011</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2010/12/08/progress-through-iterating/" title="Previous post: Progress through iterating">Progress through iterating</a></div>
+  
+  
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:invalidlogic.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2011/01/19/love-your-dependency-management/">Love your dependency management</a></li>
+        
+          <li><a href="/2010/12/08/progress-through-iterating/">Progress through iterating</a></li>
+        
+          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
+        
+          <li><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></li>
+        
+          <li><a href="/2010/10/08/involver-team-and-matz/">Involver Team and Matz</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a></p>
+  </div>
+</body>
+</html>

@@ -5,13 +5,33 @@
  <link href="http://invalidlogic.com/atom.xml" rel="self"/>
  <link href="http://invalidlogic.com"/>
  <link rel="license" type="/application/rdf+xml" href="http://creativecommons.org/licenses/by-nc-sa/3.0/rdf" />
- <updated>2010-12-08T10:12:27-08:00</updated>
+ <updated>2011-01-18T20:28:28-08:00</updated>
  <id>http://invalidlogic.com</id>
  <author>
      <name>Ken Robertson</name>
      <email>ken@invalidlogic.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Love your dependency management</title>
+   <link href="http://invalidlogic.com//2011/01/19/love-your-dependency-management/"/>
+   <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
+   <updated>2011-01-19T00:00:00-08:00</updated>
+   <id>http://invalidlogic.com//2011/01/19/love-your-dependency-management</id>
+   <content type="html">&lt;p&gt;Dependency management is a pain in the ass, but it doesn't have to be.&lt;/p&gt;
+
+&lt;p&gt;Last month we went through a full migration of all of our systems to a new provider.  This is truly awesome to do when you have all your systems spec'd out and managed with chef, however it can also highlight those areas you might have been lazy or where you didn't enforce your chef specs enough.  We managed to catch a few places where a smaller satellite app had newer system gems installed and not documented in its readme or in our chef specs.&lt;/p&gt;
+
+&lt;p&gt;Managing gems is one of those areas that you find varying opinions, but I've definitely fallen in love with &lt;a href=&quot;http://gembundler.com&quot;&gt;bundler&lt;/a&gt; over the past year.  I use it on all my personal projects, but it becomes even more valuable when used within a team of developers.  Need to change a gem?  Just do it and notify everyone to run bundle install.  Often times, bundler will actually tell them they need to update if it sees changes.  Time to deploy your changes?  That is all you do... deploy them!&lt;/p&gt;
+
+&lt;p&gt;Before, we had a mixture of vendored gems and system gems depending on whether some were using C extensions or needed to have system binaries.  But by moving these applications to use bundler, the only gem chef needs to install is bundler itself.&lt;/p&gt;
+
+&lt;p&gt;The easing of the process for both sides is awesome... both for the devs and for operations.&lt;/p&gt;
+
+&lt;p&gt;Tired of your own gem deploy or dependency management woes?  Take a look... wouldn't hurt.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Progress through iterating</title>
@@ -365,25 +385,6 @@ Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for numb
 &lt;p&gt;The problem with netbooks is they take an operating system meant for a full system and squeeze it down to a little 9-10&quot; display with a resolution of only 1024x600.  Nobody has designed anything with that small a resolution in mind for at least 10 years, if not longer.  800x600 dialogs were common before the web really caught on, before DVDs, and before laptops were actually mobile.&lt;/p&gt;
 
 &lt;p&gt;I'd thought of getting a netbook but am very glad I didn't.  Having seen my uncle's and a few others, and especially after getting my hands on an iPad, there is no comparison.  The iPad is an OS and software designed with the form factor in mind.  A netbook and even future products like the HP Slate take a desktop OS and software and use it in a way never intended.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>On the other side</title>
-   <link href="http://invalidlogic.com//2010/04/12/on-the-other-side/"/>
-   <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
-   <updated>2010-04-12T00:00:00-07:00</updated>
-   <id>http://invalidlogic.com//2010/04/12/on-the-other-side</id>
-   <content type="html">&lt;blockquote&gt;It's too overwhelming to remember that at the end of every computer is a real person, a lot like you, whose birthday was last week, who has three best friends but nobody to spoon at night, and is personally affected by what you say.&lt;/blockquote&gt;
-
-
-&lt;p&gt;From &lt;a href=&quot;http://sivers.org/real&quot;&gt;A real person, a lot like you&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Probably the biggest problem with communicating online is the lack of context.  When online you can't see facial expressions, hear the tone on their voice, or anything.  All you get is a blurb of text.&lt;/p&gt;
-
-&lt;p&gt;I know I can be difficult for others to read at times, because I can be quite short and terse.  And I've certainly had encounters like Derek Sivers pointed out in his post with doing support.&lt;/p&gt;
-
-&lt;p&gt;Since reading that post, I've tried to remain more conscious of that when working with others.  But it is also important to keep it in mind when you receive emails, IMs, comments, or other messages.  It can be easier for them to come off the wrong way and you just need to realize it might not actually be meant how it sounds.&lt;/p&gt;
 </content>
  </entry>
  
