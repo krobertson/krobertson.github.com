@@ -5,11 +5,67 @@
     <link>http://invalidlogic.com</link>
     <language>en</language>
     <webMaster>ken@invalidlogic.com (Ken Robertson)</webMaster>
-    <pubDate>2011-01-18T20:28:28-08:00</pubDate>
+    <pubDate>2011-02-07T10:26:51-08:00</pubDate>
     <copyright>Copyright 2009</copyright>
     <creativeCommons:license>http://creativecommons.org/licenses/by-nc-sa/3.0/</creativeCommons:license>
     <ttl>60</ttl>
     <description>Endlessly expanding technology</description>
+    
+    <item>
+      <title>How a deprecated method can take down a process</title>
+      <link>http://invalidlogic.com/2011/02/07/how-a-deprecated-method-can-take-down-a-process/</link>
+      <pubDate>Mon Feb 07 00:00:00 -0800 2011</pubDate>
+      <guid>http://invalidlogic.com/archives/2011/02/07/how-a-deprecated-method-can-take-down-a-process/</guid>
+      <description>&lt;p&gt;At Involver, we have a pretty active background processing tier that handles a variety of things from long running tasks we don't want in the web app, pulling in content from external sources, and simple recurring maintenance tasks.&lt;/p&gt;
+
+&lt;p&gt;Previously, we ran a single worker thread per JVM, but that setup lead to a low worker per system density since it sucked up a lot of memory.  A few months ago, we came up with a way to run multiple workers within a single JVM and have it nicely thread safe by using a small embeddable JRuby VM started off the main process.  This worked excellent and doubled the number of workers we could run per machine, since they could share heap space.&lt;/p&gt;
+
+&lt;p&gt;But then we recently began experiencing an issue where all the threads would just halt processing.  No errors, seemingly nothing wrong.  Heap usage was fine and a thread dump showed them seemingly ok, but they just sat.  We tried attaching a profiled, however it ended up just output garbage when we tried to have to dump its data after it got stuck.&lt;/p&gt;
+
+&lt;p&gt;After 2 days of investigation, finally managed to tracked the cause down to the fact that a change a few days before had caused us to start running over a function that used a deprecated method call, and the change meant we were hitting that line 500-1000 times per minute.&lt;/p&gt;
+
+&lt;div style=&quot;float:right; margin-top: 5px; margin-left: 10px; margin-bottom: 5px&quot;&gt;&lt;img src=&quot;http://invalidlogic-blog.s3.amazonaws.com/gru-light-bulb.jpg&quot; width=&quot;400&quot; height=&quot;231&quot; title=&quot;not a light bulb, but still very shiny&quot; /&gt;&lt;/div&gt;
+
+
+&lt;p&gt;At first, we suspected maybe JRuby had some sort of thread concurrency issue with calling deprecated methods, but that made no sense.  All calling a deprecated method does is write to the console!&lt;/p&gt;
+
+&lt;p&gt;As Gru in Despicable Me would say... &quot;Light bulb!&quot;&lt;/p&gt;
+
+&lt;p&gt;When running a single worker in console, we saw the warnings, but when running the multiple workers per JVM, we saw none.  The rabbit hole gets deeper and fortunately lead us to the solution and were able to confirm the issue and resolution.&lt;/p&gt;
+
+&lt;p&gt;The way we spawned the child threads, we found stdout/stderror was not attached to anything.  They make use of buffered IO though.  There is a fixed buffer size, and if you try writing more than that, it will block on writing to it until the buffer is read from and space is freed.  Since nothing was reading from it though, the threads would simply block indefinitely on writing out the deprecated method calls.&lt;/p&gt;
+
+&lt;p&gt;So we set up a test.  We created the following class on one of our boxes and spawned up the multi-worker process.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Awesome&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;kill_me_softly&lt;/span&gt;
+    &lt;span class=&quot;kp&quot;&gt;loop&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1024&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;info&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Alive!&amp;#39;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+
+&lt;p&gt;It came up, but would get hung in less than a second.  Simply do no more.  One threads would lock up independently, one by one.  So the whole JVM wasn't frozen, just that child thread.  Hence why they all died at different times, but very close together.&lt;/p&gt;
+
+&lt;p&gt;Then to confirm even more and fix it, we changed the multi-worker process to reopen the stdio handlers on child threads:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;STDIN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reopen&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/dev/null&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;STDOUT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reopen&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/dev/null&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;STDERR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reopen&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/dev/null&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+
+&lt;p&gt;Spawn one back up, and it begins streaming to no end, no lock ups, no problems.  Success!&lt;/p&gt;
+
+&lt;p&gt;In the end, we changed the function to no longer use the deprecated method, and had the multi-worker process redirect stdio for child processes to an actual file, so that way we can actually log any valuables messages we might be otherwise missing.  But that is hopefully the first and only time something as off as stdio buffering takes down a process.&lt;/p&gt;
+</description>
+      <creativeCommons:license>http://creativecommons.org/licenses/by-nc-sa/3.0/</creativeCommons:license>
+    </item>
     
     <item>
       <title>Love your dependency management</title>
@@ -211,50 +267,6 @@ Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for numb
 
 
 &lt;p&gt;The main talk starts at 7:30, however we will also have a Ruby Clinic starting at 6:30.  Bring your questions, problems, or other issues in and we'll try to help you out.&lt;/p&gt;
-</description>
-      <creativeCommons:license>http://creativecommons.org/licenses/by-nc-sa/3.0/</creativeCommons:license>
-    </item>
-    
-    <item>
-      <title>Using server aliases with Capistrano output</title>
-      <link>http://invalidlogic.com/2010/07/15/using-server-aliases-with-capistrano-output/</link>
-      <pubDate>Thu Jul 15 00:00:00 -0700 2010</pubDate>
-      <guid>http://invalidlogic.com/archives/2010/07/15/using-server-aliases-with-capistrano-output/</guid>
-      <description>&lt;p&gt;One thing we often run into without deploys is &quot;what server is that executing on?&quot;  After updating code, we actually a fairly elaborate process to remove servers from load balancing, restart, wait for load to drop off, then add it back in to load balancing.  We also just use the AWS hostnames rather than our own since our server list pretty much changes weekly.  Wouldn't it be nice to have the ouptut show &quot;app10&quot; instead of &quot;ec2-123-123-123-123.compute-1.amazonaws.com&quot;.&lt;/p&gt;
-
-&lt;p&gt;Luckily adding an alias to Capistrano is pretty easy!&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;lineno&quot;&gt; 1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Capistrano&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ServerDefinition&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 2&lt;/span&gt;   &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;to_s&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 3&lt;/span&gt;     &lt;span class=&quot;vi&quot;&gt;@to_s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;begin&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 4&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@options&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:alias&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 5&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 6&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;22&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 7&lt;/span&gt;       &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 8&lt;/span&gt;     &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 9&lt;/span&gt;   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-
-&lt;p&gt;Simply add that to your deploy.rb, or another file that is included with your recipes for utility methods.  It works simply by overriding the ServerDefinition.to_s method, which is used for the logger output.  The only change to the default method is line 4.&lt;/p&gt;
-
-&lt;p&gt;Then for your role definitions:&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;role&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;ec2-123-123-123-123.compute-1.amazonaws.com&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:alias&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;app10&amp;#39;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-
-&lt;p&gt;Then you see much better output:&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt; ** [out :: app10] Alive
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-
-
 </description>
       <creativeCommons:license>http://creativecommons.org/licenses/by-nc-sa/3.0/</creativeCommons:license>
     </item>

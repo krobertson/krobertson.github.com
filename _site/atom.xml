@@ -5,13 +5,69 @@
  <link href="http://invalidlogic.com/atom.xml" rel="self"/>
  <link href="http://invalidlogic.com"/>
  <link rel="license" type="/application/rdf+xml" href="http://creativecommons.org/licenses/by-nc-sa/3.0/rdf" />
- <updated>2011-01-18T20:28:28-08:00</updated>
+ <updated>2011-02-07T10:26:51-08:00</updated>
  <id>http://invalidlogic.com</id>
  <author>
      <name>Ken Robertson</name>
      <email>ken@invalidlogic.com</email>
  </author>
 
+ 
+ <entry>
+   <title>How a deprecated method can take down a process</title>
+   <link href="http://invalidlogic.com//2011/02/07/how-a-deprecated-method-can-take-down-a-process/"/>
+   <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
+   <updated>2011-02-07T00:00:00-08:00</updated>
+   <id>http://invalidlogic.com//2011/02/07/how-a-deprecated-method-can-take-down-a-process</id>
+   <content type="html">&lt;p&gt;At Involver, we have a pretty active background processing tier that handles a variety of things from long running tasks we don't want in the web app, pulling in content from external sources, and simple recurring maintenance tasks.&lt;/p&gt;
+
+&lt;p&gt;Previously, we ran a single worker thread per JVM, but that setup lead to a low worker per system density since it sucked up a lot of memory.  A few months ago, we came up with a way to run multiple workers within a single JVM and have it nicely thread safe by using a small embeddable JRuby VM started off the main process.  This worked excellent and doubled the number of workers we could run per machine, since they could share heap space.&lt;/p&gt;
+
+&lt;p&gt;But then we recently began experiencing an issue where all the threads would just halt processing.  No errors, seemingly nothing wrong.  Heap usage was fine and a thread dump showed them seemingly ok, but they just sat.  We tried attaching a profiled, however it ended up just output garbage when we tried to have to dump its data after it got stuck.&lt;/p&gt;
+
+&lt;p&gt;After 2 days of investigation, finally managed to tracked the cause down to the fact that a change a few days before had caused us to start running over a function that used a deprecated method call, and the change meant we were hitting that line 500-1000 times per minute.&lt;/p&gt;
+
+&lt;div style=&quot;float:right; margin-top: 5px; margin-left: 10px; margin-bottom: 5px&quot;&gt;&lt;img src=&quot;http://invalidlogic-blog.s3.amazonaws.com/gru-light-bulb.jpg&quot; width=&quot;400&quot; height=&quot;231&quot; title=&quot;not a light bulb, but still very shiny&quot; /&gt;&lt;/div&gt;
+
+
+&lt;p&gt;At first, we suspected maybe JRuby had some sort of thread concurrency issue with calling deprecated methods, but that made no sense.  All calling a deprecated method does is write to the console!&lt;/p&gt;
+
+&lt;p&gt;As Gru in Despicable Me would say... &quot;Light bulb!&quot;&lt;/p&gt;
+
+&lt;p&gt;When running a single worker in console, we saw the warnings, but when running the multiple workers per JVM, we saw none.  The rabbit hole gets deeper and fortunately lead us to the solution and were able to confirm the issue and resolution.&lt;/p&gt;
+
+&lt;p&gt;The way we spawned the child threads, we found stdout/stderror was not attached to anything.  They make use of buffered IO though.  There is a fixed buffer size, and if you try writing more than that, it will block on writing to it until the buffer is read from and space is freed.  Since nothing was reading from it though, the threads would simply block indefinitely on writing out the deprecated method calls.&lt;/p&gt;
+
+&lt;p&gt;So we set up a test.  We created the following class on one of our boxes and spawned up the multi-worker process.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Awesome&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;kill_me_softly&lt;/span&gt;
+    &lt;span class=&quot;kp&quot;&gt;loop&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1024&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;info&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Alive!&amp;#39;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+
+&lt;p&gt;It came up, but would get hung in less than a second.  Simply do no more.  One threads would lock up independently, one by one.  So the whole JVM wasn't frozen, just that child thread.  Hence why they all died at different times, but very close together.&lt;/p&gt;
+
+&lt;p&gt;Then to confirm even more and fix it, we changed the multi-worker process to reopen the stdio handlers on child threads:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;STDIN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reopen&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/dev/null&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;STDOUT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reopen&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/dev/null&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;STDERR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reopen&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/dev/null&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+
+&lt;p&gt;Spawn one back up, and it begins streaming to no end, no lock ups, no problems.  Success!&lt;/p&gt;
+
+&lt;p&gt;In the end, we changed the function to no longer use the deprecated method, and had the multi-worker process redirect stdio for child processes to an actual file, so that way we can actually log any valuables messages we might be otherwise missing.  But that is hopefully the first and only time something as off as stdio buffering takes down a process.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Love your dependency management</title>
@@ -369,22 +425,6 @@ Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for numb
 
 &lt;p&gt;On Monday begins a new chapter though.  I've decided to make the leap from developing in .NET full time to focusing on Ruby and Rails.  On Monday, I join the team at &lt;a href=&quot;http://involver.com&quot;&gt;Involver&lt;/a&gt;, where I'll be building applications for marketers and brands to reach audiences through social media.  I am really looking forward to working on their platform and to get back to face to face time with my coworkers.&lt;/p&gt;
 
-</content>
- </entry>
- 
- <entry>
-   <title>Is the netbook form factor good for anything?</title>
-   <link href="http://invalidlogic.com//2010/04/14/is-the-netbook-form-factor-good-for-anything/"/>
-   <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
-   <updated>2010-04-14T00:00:00-07:00</updated>
-   <id>http://invalidlogic.com//2010/04/14/is-the-netbook-form-factor-good-for-anything</id>
-   <content type="html">&lt;p&gt;Last night, my uncle called me to ask the same question about his netbook for the third time.  Right when he started out, I knew what it was and was just thinking he should get an iPad the whole time.  Netbooks are the wrong form factor for just about everything, especially if you aren't tech savvy.&lt;/p&gt;
-
-&lt;p&gt;He called me to ask me about how to use a dialog box that goes off the screen.  It was his third time with that issue.  The first time, he was installing Adobe Acrobat Reader and the button on the license acceptance dialog was off screen.  The second time, it was with installing some DVD software.  And now, the third time, he was trying to print and the button was off screen.&lt;/p&gt;
-
-&lt;p&gt;The problem with netbooks is they take an operating system meant for a full system and squeeze it down to a little 9-10&quot; display with a resolution of only 1024x600.  Nobody has designed anything with that small a resolution in mind for at least 10 years, if not longer.  800x600 dialogs were common before the web really caught on, before DVDs, and before laptops were actually mobile.&lt;/p&gt;
-
-&lt;p&gt;I'd thought of getting a netbook but am very glad I didn't.  Having seen my uncle's and a few others, and especially after getting my hands on an iPad, there is no comparison.  The iPad is an OS and software designed with the form factor in mind.  A netbook and even future products like the HP Slate take a desktop OS and software and use it in a way never intended.&lt;/p&gt;
 </content>
  </entry>
  
