@@ -5,7 +5,7 @@
     <link>http://invalidlogic.com</link>
     <language>en</language>
     <webMaster>ken@invalidlogic.com (Ken Robertson)</webMaster>
-    <pubDate>2011-02-11T09:33:17-08:00</pubDate>
+    <pubDate>2011-02-11T10:04:37-08:00</pubDate>
     <copyright>Copyright 2009</copyright>
     <creativeCommons:license>http://creativecommons.org/licenses/by-nc-sa/3.0/</creativeCommons:license>
     <ttl>60</ttl>
@@ -22,7 +22,7 @@
 
 &lt;p&gt;For our hosting provider, we ended up going with &lt;a href=&quot;http://networkredux.com&quot;&gt;Network Redux&lt;/a&gt;.  Of all the others, both big names you'd recognized and some smaller ones you wouldn't, they proved the best fit.  Go to any provider and they can all get you the same server.  That is easy.  Its the other services, the skills of their staff, and quality of the total, big picture architecture that matters.  With Network Redux, a lot of it came down to the fact they they worked like us.  They hired top-notch people, they moved quickly on things, and had a short decision tree.  Case in point, when the President is on your sales call and can say you'll have a test system with set specs in two days, vs the sales person needing to pull out an org chart and &quot;get back to you.&quot;&lt;/p&gt;
 
-&lt;p&gt;After our month of refactoring, we finally flipped the switch the night of December 23rd.  We did an entire datacenter migration with no user downtime.  Even more, we didn't even have all of our production systems until that morning (thanks Dell! &amp;lt;/sarcasm%gt;).&lt;/p&gt;
+&lt;p&gt;After our month of refactoring, we finally flipped the switch the night of December 23rd.  We did an entire datacenter migration with no user downtime.  Even more, we didn't even have all of our production systems until that morning (thanks Dell! &amp;lt;/sarcasm&amp;gt;).&lt;/p&gt;
 
 &lt;p&gt;So how did we pull it off?&lt;/p&gt;
 
