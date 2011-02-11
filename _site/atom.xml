@@ -5,13 +5,64 @@
  <link href="http://invalidlogic.com/atom.xml" rel="self"/>
  <link href="http://invalidlogic.com"/>
  <link rel="license" type="/application/rdf+xml" href="http://creativecommons.org/licenses/by-nc-sa/3.0/rdf" />
- <updated>2011-02-07T10:33:51-08:00</updated>
+ <updated>2011-02-11T09:33:17-08:00</updated>
  <id>http://invalidlogic.com</id>
  <author>
      <name>Ken Robertson</name>
      <email>ken@invalidlogic.com</email>
  </author>
 
+ 
+ <entry>
+   <title>How we did a datacenter migration with no downtime</title>
+   <link href="http://invalidlogic.com//2011/02/11/how-we-did-a-datacenter-migration-with-no-downtime/"/>
+   <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
+   <updated>2011-02-11T00:00:00-08:00</updated>
+   <id>http://invalidlogic.com//2011/02/11/how-we-did-a-datacenter-migration-with-no-downtime</id>
+   <content type="html">&lt;p&gt;Starting in October, we at Involver decided to take on a project migrate our entire infrasture off of Amazon EC2.  AWS had served us well, however there comes a point where the limitations of some of their services were becoming a major bottleneck.  The bottlenecks and how we've resolved them in our migration is a big enough topic for a follow up post, but we recognized that we needed more control over our environment and the specifications of all the systems.&lt;/p&gt;
+
+&lt;p&gt;After nearly a month of evaluating providers, doing benchmarks on test systems, and milling over all the details, we picked our provider.  We then spent another month refactoring various systems, re-evaluating all machine roles, and system configurations.  Since we were no longer constrained by EC2 instance types, we started looking at how many CPUs and how much RAM is really best suited for each system.&lt;/p&gt;
+
+&lt;p&gt;For our hosting provider, we ended up going with &lt;a href=&quot;http://networkredux.com&quot;&gt;Network Redux&lt;/a&gt;.  Of all the others, both big names you'd recognized and some smaller ones you wouldn't, they proved the best fit.  Go to any provider and they can all get you the same server.  That is easy.  Its the other services, the skills of their staff, and quality of the total, big picture architecture that matters.  With Network Redux, a lot of it came down to the fact they they worked like us.  They hired top-notch people, they moved quickly on things, and had a short decision tree.  Case in point, when the President is on your sales call and can say you'll have a test system with set specs in two days, vs the sales person needing to pull out an org chart and &quot;get back to you.&quot;&lt;/p&gt;
+
+&lt;p&gt;After our month of refactoring, we finally flipped the switch the night of December 23rd.  We did an entire datacenter migration with no user downtime.  Even more, we didn't even have all of our production systems until that morning (thanks Dell! &amp;lt;/sarcasm%gt;).&lt;/p&gt;
+
+&lt;p&gt;So how did we pull it off?&lt;/p&gt;
+
+&lt;p&gt;It boils down to an excellent team, delicate planning, and an awesome toolset.  Our operations team is only 3 people, but we manage what is now 8 environments where our code lives and about 100 systems.&lt;/p&gt;
+
+&lt;p&gt;Everything in our environment is fully configured with chef.  With the migration, we refactored a lot of our recipes put a strong emphasis on everything in chef.  Each system was provisioned, cooked and recipes tweaked, then destroyed, reprovisioned, and recooked.  Repeated until it was ready to go right after cooking.&lt;/p&gt;
+
+&lt;h3&gt;MySQL&lt;/h3&gt;
+
+&lt;p&gt;Our production database servers were the first to get set up on the production side.  We'd already validated all our chef recipes for both our MySQL and our MongoDB clusters on our staging environment beforehand.  With MySQL, we run a master-master setup with multiple read-only slaves.  We cooked each of the boxes and configured all of the slaves to point to what would be the new master.  We made a change to ensure that the new master and the EC2 master had different auto-increment offset and we also ensured log_slave_updates was enabled.  We then imported a backup of our production database onto the new master.  It automatically replicated out to the passive master and read-only slaves.  We then set it up so our new master would replicate from our EC2 master.&lt;/p&gt;
+
+&lt;p&gt;With this configuration, writes would be coming in on our EC2 master, get replicated to the new master, and since it has log_slave_updates on, those changes would then replicate our to the other database servers.  This also enabled us to switch over the site and easily allow writes to start coming in to the new environment.  If there were some lagging requests to the old site, they would replicate to the new environment without any collisions.  We also documented the position of the new master when the switch happened, so if we needed to revert, we could potentially set the EC2 master to replicate from the other master.&lt;/p&gt;
+
+&lt;h3&gt;MongoDB&lt;/h3&gt;
+
+&lt;p&gt;The MongoDB databases were migrated in a different fashion.  We were moving from a single replica set configuration to a sharded setup with two replica sets.  Because of this, we could do the same early replication process we did with MySQL.  Mongo is primarily used for our analytics data, so with it, there is a primary collection that is most important and then others used for the calculations.  We cooked the database servers ahead of time and got the sharding configuration and everything fully setup before hand.  Then the data migration was scripted out so that with a quick command, we would pull the most important data over first by exporting the data, transferring it, then importing it.  This way, it was migrated and sharded at the same time and fully automated.&lt;/p&gt;
+
+&lt;h3&gt;Our Application&lt;/h3&gt;
+
+&lt;p&gt;The morning of the 23rd, we came in, having just had the bulk of our production virtualization cluster setup the night before (thanks again for the delay Dell).  This is where the awesomeness of chef and our team truly shined.  We set to work and provisioned all of the production systems, cooked them, set them up in load balancing, verified security rules, and completed some of the final code tweaks and testing.  We didn't even deploy our final monitoring systems until that morning.   We did a few test deploys, verified all the parts of the app would come up, and that monitoring on them was accurate.&lt;/p&gt;
+
+&lt;h3&gt;The Switch&lt;/h3&gt;
+
+&lt;p&gt;Finally, around 10:45pm, we made the switch.  The actual cut off boiled down to just a DNS change.  TTLs had been changed to 60 seconds weeks earlier.  We just repointed the necessary hosts and within 60 seconds, we saw the majority of traffic cease on EC2 and come in on our new systems.&lt;/p&gt;
+
+&lt;p&gt;Right after we made the DNS change, we also removed all of our old app servers from ELB (Elastic Load Balancer) except for two.  We turned nginx off on those two and turned on &lt;a href=&quot;/2010/02/12/migrating-datacenters-how-to-forward-traffic&quot;&gt;rinetd&lt;/a&gt;, which was already configured to forward any traffic to port 80 or 443 to our new environment.&lt;/p&gt;
+
+&lt;p&gt;The benefits of the migration were almost instantly visible.  Noah, our CTO, was in the office with us to do acceptance testing right afterward.  We made the switch, verified DNS had updated, and when he loaded the first page, his first reaction was &quot;Holy shit... this is so much faster!&quot;  That there was all the validation we needed for the 2 months of work we had put in.&lt;/p&gt;
+
+&lt;p&gt;Most impressive was looking back at data in New Relic from before and after the migration.  It was quite surprising how drastic the improvement was.&lt;/p&gt;
+
+&lt;div style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;http://invalidlogic-blog.s3.amazonaws.com/redux-switch.jpg&quot; width=&quot;647&quot; height=&quot;264&quot; /&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And its gotten even better.  Having to no longer fight fires with AWS anymore, we've actually made tons of other enhancements.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>How a deprecated method can take down a process</title>
@@ -409,22 +460,6 @@ Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for numb
 &lt;p&gt;It is important to be aware of the &quot;isms&quot; that influence you.  When moving into a new language, often times they are visible to others more familiar with the language, and more importantly, can shield you from other techniques the language offers.  While many are innocent, awareness is important to help you continue to grow.&lt;/p&gt;
 
 &lt;p&gt;However when &quot;isms&quot; cross back to a language you already know, they offer a chance to gain new perspective on methodologies you already practice and a might offer an opportunity to pose the question &quot;how can I make this better&quot;.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Taking a new direction</title>
-   <link href="http://invalidlogic.com//2010/05/14/taking-a-new-direction/"/>
-   <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
-   <updated>2010-05-14T00:00:00-07:00</updated>
-   <id>http://invalidlogic.com//2010/05/14/taking-a-new-direction</id>
-   <content type="html">&lt;p&gt;Today is my last day at &lt;a href=&quot;http://telligent.com&quot;&gt;Telligent&lt;/a&gt;.  After almost 6 years at Telligent, I have decided it is time to move on.  I've certainly enjoyed my time and taken pleasure in watching our products mature over that time and working with amazing developers who've definitely helped me grow.&lt;/p&gt;
-
-
-
-
-&lt;p&gt;On Monday begins a new chapter though.  I've decided to make the leap from developing in .NET full time to focusing on Ruby and Rails.  On Monday, I join the team at &lt;a href=&quot;http://involver.com&quot;&gt;Involver&lt;/a&gt;, where I'll be building applications for marketers and brands to reach audiences through social media.  I am really looking forward to working on their platform and to get back to face to face time with my coworkers.&lt;/p&gt;
-
 </content>
  </entry>
  
