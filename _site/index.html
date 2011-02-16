@@ -24,10 +24,239 @@
 
     <div id="content" class="group">
       
+  <h2><a href="/2011/02/16/our-pain-points-with-ec2/">Our pain points with EC2 and how our moved solved them</a></h2>
+
+  <div class="main">
+    <p>As I mentioned in my last post, we made the move off of EC2 in December to our own cluster of machines.</p>
+
+<p>While EC2 had served us very well and helped get our systems to the
+place they are today, we started reaching a point where we were
+running into three main bottlenecks with the EC2 ecosystem and we couldn't find any way around them.</p>
+
+<p>Will start off by saying the AWS is an awesome service and we couldn't
+have grown to the level we are at today without them.  Amazon should
+be a easy contender for any service just starting out.  Some of the
+services they provide, especially things like Elastic Load Balancer
+(ELB) and Elastic Block Storage (EBS) are services that are simple to
+start using, help tremendously as you grow, and simply aren't common
+with traditional VPS hosting.</p>
+
+<p>However, here are some of the bottlenecks we faced and how we've
+solved them in our new setup.</p>
+
+<h3>IO Performance</h3>
+
+<p>Anyone who is doing anything intensive on EC2 will tell you that IO
+performance is horrendous.  We were battling EBS constantly on our
+database servers and had serious questions how we could continue to
+operate yet alone scale our DBs while in the cloud.  We met with AWS engineers to review our configurations, but
+were already doing all the best practices.  We had tuned MySQL
+configuration as much
+as we could, had the "high-memory" instances and higher IO priority
+and newer CPUs,
+and were running 4 EBS volumes in RAID10.</p>
+
+<p>They tried to push Amazon RDS, however RDS is simply EC2 and EBS with
+the same best practices.  While it might be slightly better, it wasn't going to
+totally solve our problems.</p>
+
+<p>The biggest issue was IO latency.  We had database servers where it
+was normal for them to average 20-30% IO wait.  We frequently had
+spikes upwards of 60% to sometimes 90%.</p>
+
+<p>And it wasn't always disk performance, but IO as a whole.  We would at times provision a
+new database server that would simply struggle to stay fully
+replicated with no query load on it.  Either struggling with IO
+latency, or sometimes even keeping a connection up to the master.</p>
+
+<p>There is unfortunately no solution.  Everything in AWS is a shared
+resource.  With that comes variable performance and bad spikes due to
+hot-spots.  It is difficult to predict or ensure consistent
+expectations.</p>
+
+<h3>Support</h3>
+
+<p>At one point, we encountered an issue where we were seeing extreme IO
+latency on our EBS volumes on our master MySQL DB server.  One of our
+other ops guys was up for several hours in the middle of the night,
+along with our CTO and Director of Product.  Unfortunately it was an
+EBS issue throughout the entire zone and we had a large footprint in
+that zone, including our master database server.</p>
+
+<p>The biggest thing we took issue with was that it was almost 3 hours
+before it actually made it to Amazon's status dashboard.</p>
+
+<p>After that incident, we started looking at Amazon's Premium support,
+however the support packages are really quite weak when you dig into
+them.</p>
+
+<p>First of all, Premium is a straight 20% added to your bill.  You can't
+select it per instance or anything.  We didn't care about premium
+support on our staging systems, so we'd have to move those to another
+account if we signed up.</p>
+
+<p>But the big thing... you get 24/7 phone support and a 1 hour
+acknowledgement SLA.  Meaning they'll confirm you are having an issue
+within 1 hour.  However, resolution is another thing.  Because
+everything in AWS are shared resources, they can't offer any sort of
+priority resolution at all.</p>
+
+<p>So that EBS latency issue?  It took 3 hours to make their status
+dashboard, and a total of 11 hour from when we noticed it to them
+posting it was totally resolved.</p>
+
+<p>Paying for Premium support wouldn't have helped much.  It would still
+be fixed for us at the same time.  At telling the CTO/Director "AWS
+has acknowledged it, it'll be fixed when its fixed" isn't the type of
+message we like to deliver.</p>
+
+<h3>Scaling Costs</h3>
+
+<p>Amazon is great for services just starting out.  It is simple pay-as-you-go, you get availability of a lot of nice functionality with S3,
+Elastic Load Balancer, and others, and it is quick to get bigger instances
+as you grow and need more.</p>
+
+<p>However there comes a threshold where the costs start growing more
+quickly than your scale.</p>
+
+<p>Want support?  Bam, extra 10%-20%.</p>
+
+<p>IO bottlenecks?  Amazon's answer is to use bigger instances (higher IO
+priority) and spread the load across multiple instances.  Both of those mean
+more money.</p>
+
+<p>Once you start reaching bottlenecks, the only answer within AWS is to
+work around them, and that usually means more costs.</p>
+
+<p>Additionally, since it is so easy to provision new systems, it is easy
+to get carried away without realizing how much the changes are costing you.</p>
+
+<h3>Insight</h3>
+
+<p>This is actually a bottleneck we didn't really realize until after we
+moved.  It is amazing how little insight you have into your
+architecture until you have full control over it.</p>
+
+<p>For instance, on the new setup we had nice zone separation between
+systems and were seeing massive spikes in concurrent connections
+through the firewall, 3x more than we expected.  They all ended up
+being DNS traffic.  Since it was UDP, the "connection" count was
+skewed, but we hadn't realized how much DNS traffic we generated.  In
+AWS, we couldn't monitor low level traffic metrics in the same way,
+track our aggregate DNS traffic, or anything.</p>
+
+<h3>Our Solutions</h3>
+
+<p>Our solutions to all of these were actually quite simple and are a
+nice blend between old school architecture and modern pragmatism.</p>
+
+<p>Nowadays, you start to hear all this stuff about "private clouds".
+First of all, drop the bullshit.  "Cloud" is slapped on anything it
+can be these days.  There is nothing new to the concept of "private clouds".</p>
+
+<p>All it is is a virtualization cluster on equipment dedicated to you.
+Its been around for 10+ years.  Clouds caught on because they were
+simple to get started with and great at the small scale.  Now its just
+a marketing buzzword.</p>
+
+<p>Our approach was simple.  We separated our environment out into a
+hybrid of dedicated systems for some things, and a large SAN backed
+virtualization cluster for everything else.</p>
+
+<h4>Databases</h4>
+
+<p>Dedicated hardware is the perfect solution for IO intensive
+workloads.  With this, we could actually specify what we wanted.
+Types of disks, RAID configuration, capacity, etc.  We could go as
+simple as RAID 10, up to SSD or even FusionIO.</p>
+
+<p>We moved all our MySQL and MongoDB systems to dedicated hardware, each
+built to their own needs and planned ahead for a certain timeline.  We
+then looked at several growth metrics.  For instance, MySQL would
+likely need more CPU or disk capacity in the future.  MongoDB would
+likely need more RAM in the future.</p>
+
+<h4>Virtualization</h4>
+
+<p>Almost everything else was virtualization.  We got several very big,
+bulky virtualization systems.  12 cores, 24 threads, 128gb RAM, ohh
+yeah.  However we slice and dice it is up to us.  We have everything
+configured for full failover of the base chassis.</p>
+
+<p>At the SAN level, we left that up to the guys at Network Redux.  They
+monitor the workload levels and plan for it accordingly.  The IO
+doesn't scale infinitely, but rather we try to maintain an average
+expectation so that growth is predictable.</p>
+
+<h4>Support</h4>
+
+<p>Support is probably one the biggest and most dramatic changes.  AWS is
+a complete black box.  Now, we have two people dedicated to our
+account, as well as a 24 support desk we can call and have a tech pull
+up all the details on our account.  We have the cellphone numbers of
+the people dedicated to our account.  We have yet to call them at 2am,
+however having it is more than we ever had with Amazon.</p>
+
+<p>We now have people proactively working to help us.  If IO load is
+growing on the SAN, they reach out to us ahead of time, before it
+becomes a problem on our end.</p>
+
+<p>If a hardware node throws an alert, they get paged at the same time
+and will hop online to help us to investigate.</p>
+
+<p>This is probably one of the biggest pros and our new provider, <a href="http://networkredux.com/">Network Redux</a> has been truly awesome in that regard.  They are proactive, we deal with the same people over time so they are familiar with our deployment, our change history, etc.</p>
+
+<h4>Costs</h4>
+
+<p>Costs though... surely all this raw hardware goodness, scalable IO,
+and choice in your deployment costs a whole lot extra, doesn't it?
+Not so.  You might actually be surprised how much cheaper it is.  I
+can't give numbers, but I will say it was <em>significant</em> and after the
+move one of the main bullet points added by the CFO was <em>how much</em>
+cheaper it was.</p>
+
+<p>To make the CFO even happier, we had planned ahead for growth, where
+we could handle spikes and add some additional systems without extra
+costs, and had solid figured on how much the costs would increase.
+"When we need more capacity here, the next step is X, and the cost
+will be $Y."  As more time goes on, we're getting better at predicting
+when the growth will be needed, and showing the benefits.</p>
+
+<h3>Conclusions</h3>
+
+<p>Overall, Amazon is great service.  Don't get me wrong.  It is truly
+excellent for companies/services just starting out and has an awesome
+growth path for scaling early on.</p>
+
+<p>However nothing scales infinitely.  Not your applications, and not the
+benefits of a service like AWS.</p>
+
+<p>Once you each a certain threshold, you benefit more from full control
+over your environment and you get to the point where it is actually
+cheaper than the cookie cutter services AWS provides.  Where that
+threshold is depends on each case.  But it is important to know where
+it is, even if you aren't there yet.</p>
+
+<p>For us, we improved our performance several times over, have more
+control than ever, and did it all while actually saving money.</p>
+
+  </div>
+
+  <div class="meta group">
+    <div class="signature">
+      <p>Wednesday, February 16, 2011</p>
+    </div>	
+    <div class="tags">
+      &nbsp;
+    </div>
+  </div>
+
   <h2><a href="/2011/02/11/how-we-did-a-datacenter-migration-with-no-downtime/">How we did a datacenter migration with no downtime</a></h2>
 
   <div class="main">
     <p>Starting in October, we at Involver decided to take on a project migrate our entire infrasture off of Amazon EC2.  AWS had served us well, however there comes a point where the limitations of some of their services were becoming a major bottleneck.  The bottlenecks and how we've resolved them in our migration is a big enough topic for a follow up post, but we recognized that we needed more control over our environment and the specifications of all the systems.</p>
+
+<p><strong>Update:</strong> Have posted the follow up on the <a href="/2011/02/16/our-pain-points-with-ec2/">bottlenecks we were facing EC2</a>.</p>
 
 <p>After nearly a month of evaluating providers, doing benchmarks on test systems, and milling over all the details, we picked our provider.  We then spent another month refactoring various systems, re-evaluating all machine roles, and system configurations.  Since we were no longer constrained by EC2 instance types, we started looking at how many CPUs and how much RAM is really best suited for each system.</p>
 
@@ -273,50 +502,6 @@
     </div>
   </div>
 
-  <h2><a href="/2010/09/16/you-got-rvm-and-git-in-my-command-prompt/">You got RVM and git in my command prompt!</a></h2>
-
-  <div class="main">
-    <p>I had posted this to our internal wiki at work, but <a href="http://twitter.com/scottw">Scott</a> had mentioned he <a href="http://twitter.com/scottw/status/24492462082">was interested in it</a>, so figured I'd throw it up here.</p>
-
-<p>Zsh is the best shell.  If you don't know, <a href="http://www.zsh.org/">now you know</a>.</p>
-
-<p>One thing that is a nice convenience is to setup the command prompt to include your current Ruby implementation, RVM gemset, and which branch of the git repository you are in.  In our main codebase at Involver, my prompt looks like this:</p>
-
-<div align="center"><img src="http://img.skitch.com/20100916-r1s8h53qw3pc718fnb4fnrsefy.jpg" alt="prompt" width="496" height="84" /></div>
-
-
-<p>From this, I can tell I'm using JRuby 1.5.1, the "involver" gemset.  I'm in the "topsecret" project folder (I just have the current directory, not the full path), and the "git:master" indicates its a git repository and I'm in the master branch.</p>
-
-<p>To achieve that, add the following into your .zshrc or one of the files you source into it.</p>
-
-<div class="highlight"><pre><code class="text"><span class="lineno"> 1</span> parse_git_branch() {
-<span class="lineno"> 2</span>   git branch 2&gt; /dev/null | sed -e &#39;/^[^*]/d&#39; -e &#39;s/* \(.*\)/\/git:\1/&#39;
-<span class="lineno"> 3</span> }
-<span class="lineno"> 4</span> 
-<span class="lineno"> 5</span> rvm_prompt() {
-<span class="lineno"> 6</span>   $HOME/.rvm/bin/rvm-prompt v g
-<span class="lineno"> 7</span> }
-<span class="lineno"> 8</span> 
-<span class="lineno"> 9</span> export PS1=&#39;%{$reset_color$fg[blue]%}$(rvm_prompt)%{$reset_color$fg[gray]%}:
-<span class="lineno">10</span> %1~%{$reset_color$bold_color$fg[green]%}%{$reset_color$fg[green]%}
-<span class="lineno">11</span> $(parse_git_branch)&gt;%{$reset_color%} &#39;
-</code></pre>
-</div>
-
-
-<p>There are of course many more things you can do with zsh.  I have this and other tidbits in my <a href="http://github.com/krobertson/dotfiles">dotfiles repo</a> on Github.  And now that I think of it, have some stuff I haven't checked in since I'm not in TextMate/Ruby/zsh all day.</p>
-
-  </div>
-
-  <div class="meta group">
-    <div class="signature">
-      <p>Thursday, September 16, 2010</p>
-    </div>	
-    <div class="tags">
-      &nbsp;
-    </div>
-  </div>
-
 
     </div>
 
@@ -347,6 +532,8 @@
       <h3>Recent Posts</h3>
       <ul>
         
+          <li><a href="/2011/02/16/our-pain-points-with-ec2/">Our pain points with EC2 and how our moved solved them</a></li>
+        
           <li><a href="/2011/02/11/how-we-did-a-datacenter-migration-with-no-downtime/">How we did a datacenter migration with no downtime</a></li>
         
           <li><a href="/2011/02/07/how-a-deprecated-method-can-take-down-a-process/">How a deprecated method can take down a process</a></li>
@@ -354,8 +541,6 @@
           <li><a href="/2011/01/19/love-your-dependency-management/">Love your dependency management</a></li>
         
           <li><a href="/2010/12/08/progress-through-iterating/">Progress through iterating</a></li>
-        
-          <li><a href="/2010/10/25/tool-enlightenment-part-2/">Tool Enlightenment, Part 2</a></li>
         
     	</ul>
     </div>
