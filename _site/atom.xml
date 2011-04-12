@@ -5,13 +5,67 @@
  <link href="http://invalidlogic.com/atom.xml" rel="self"/>
  <link href="http://invalidlogic.com"/>
  <link rel="license" type="/application/rdf+xml" href="http://creativecommons.org/licenses/by-nc-sa/3.0/rdf" />
- <updated>2011-02-16T12:39:08-08:00</updated>
+ <updated>2011-04-12T09:48:38-07:00</updated>
  <id>http://invalidlogic.com</id>
  <author>
      <name>Ken Robertson</name>
      <email>ken@invalidlogic.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Serving Static Content Via POST From Nginx</title>
+   <link href="http://invalidlogic.com//2011/04/12/serving-static-content-via-post-from-nginx/"/>
+   <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
+   <updated>2011-04-12T00:00:00-07:00</updated>
+   <id>http://invalidlogic.com//2011/04/12/serving-static-content-via-post-from-nginx</id>
+   <content type="html">&lt;p&gt;Recently, a change was made on Facebook's end where their &amp;lt;fb:iframe&gt; FBML tag started doing POST request to get content.  Their documentation seemed to indicate their &quot;Post for Canvas&quot; change wouldn't affect the &amp;lt;fb:iframe&gt; tag, however our error logs spoke quite to the contrary.  We saw an influx in errors in places where we used &amp;lt;fb:iframe&gt; to pull in static content.  Nginx would simply return a 405 error for &quot;Method Not Allowed&quot;.  Nginx can't serve static content on a POST request.&lt;/p&gt;
+
+&lt;p&gt;Some quick googling seems to reveal some quick answers, but the problem is none of them worked.&lt;/p&gt;
+
+&lt;p&gt;The most popular, &lt;a href=&quot;http://forum.nginx.org/read.php?2,2414,47301&quot;&gt;this thread&lt;/a&gt;, talks about a work around by manipulating the error page for nginx.  First, there is some mixed syntax depending on the nginx version.  Some references seem to be to old 2007 syntax which doesn't work on the nginx 0.7 build we use.  But they all indicated that this &lt;em&gt;should&lt;/em&gt; have worked:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;nginx&quot;&gt;&lt;span class=&quot;k&quot;&gt;error_page&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;405&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@405&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@405&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+
+&lt;p&gt;This basically tells nginx to change the response code to 200 for 405 messages, and to use the @405 location entry to handle it.  Setting the root it is supposed to pull the requested document.  It didn't work though.  At best, I got it to return a 200 code, but no response body.  Essentially, it was still doing a POST request and it still didn't like it.&lt;/p&gt;
+
+&lt;p&gt;I could however, get it to be served by proxying it to our Rails application, if I enabled serving static content from Rails.  But that was less than ideal.&lt;/p&gt;
+
+&lt;p&gt;But then, I was scanning through nginx's &lt;a href=&quot;http://wiki.nginx.org/HttpProxyModule&quot;&gt;proxy documentation&lt;/a&gt; and found what seemed like an ideal solution.  I could configure nginx to serve static content on another port, have the main server proxy it to the other port, and when proxying, change it into a GET request:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;nginx&quot;&gt;&lt;span class=&quot;k&quot;&gt;upstream&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;static_backend&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;localhost&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;89&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;...&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;error_page&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;405&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@405&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@405&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;proxy_method&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;GET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;proxy_pass&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://static_backend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# POST STATIC CONTENT&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;89&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;server_name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+
+
+</content>
+ </entry>
  
  <entry>
    <title>Our pain points with EC2 and how our moved solved them</title>
@@ -632,37 +686,6 @@ Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for numb
 
 
 &lt;p&gt;Will maybe sometime look at email processing more, but email templates are often far simpler and their action methods do less loading.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Tracing Cache Money transactions through New Relic</title>
-   <link href="http://invalidlogic.com//2010/06/15/tracing-cache-money-transactions-through-new-relic/"/>
-   <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
-   <updated>2010-06-15T00:00:00-07:00</updated>
-   <id>http://invalidlogic.com//2010/06/15/tracing-cache-money-transactions-through-new-relic</id>
-   <content type="html">&lt;p&gt;At Involver, we've been starting to make heavy use of &lt;a href=&quot;http://newrelic.com/&quot;&gt;New Relic&lt;/a&gt; to start monitoring performance and track down bottlenecks.  I've been working to add method tracers around components that utilize external APIs or services, and some of the major components we leverage to know how much time is spent in various areas.&lt;/p&gt;
-
-&lt;p&gt;We use &lt;a href=&quot;http://github.com/nkallen/cache-money&quot;&gt;Cache Money&lt;/a&gt;, a gem that helps transparently cache models in Memcached.  Out of the box, New Relic supports tracing calls for Memcached, however on traces we'd see a long list of Memcached calls but no information as to which request they were associated with.&lt;/p&gt;
-
-&lt;p&gt;For a lot of our additional traces, we've added an rpm_extras.rb file.  To include tracing for Cache Money, just need to define it as follows:&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;lineno&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class_eval&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;2&lt;/span&gt;   &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;3&lt;/span&gt;     &lt;span class=&quot;n&quot;&gt;add_method_tracer&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Custom/CacheMoney/transaction&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;4&lt;/span&gt;     &lt;span class=&quot;n&quot;&gt;add_method_tracer&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:find_every&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Custom/CacheMoney/find_every&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;5&lt;/span&gt;     &lt;span class=&quot;n&quot;&gt;add_method_tracer&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:find_from_ids&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Custom/CacheMoney/find_from_ids&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;6&lt;/span&gt;   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;7&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-
-&lt;p&gt;New Relic itself uses add_method_tracer around transaction and find_by_sql, however Cache Money works by alias_method_chaining transaction, find_every, and find_from_ids.&lt;/p&gt;
-
-&lt;p&gt;One thing worth noting is that since both New Relic and Cache Money make use of transaction, order of loading could be important.  In our environment.rb, we load our rpm_extras.rb in the after_initialize block.  When RPM is loaded, it wraps the actual ActiveRecord#transaction call, then Cache Money chains it, and our own tracer wraps the chained call.&lt;/p&gt;
-
-&lt;p&gt;Initially, I tried putting the tracer around Cache Money's own transaction_with_cache_transaction, however that didn't show up in traces.&lt;/p&gt;
 </content>
  </entry>
  

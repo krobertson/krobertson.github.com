@@ -5,11 +5,65 @@
     <link>http://invalidlogic.com</link>
     <language>en</language>
     <webMaster>ken@invalidlogic.com (Ken Robertson)</webMaster>
-    <pubDate>2011-02-16T12:39:08-08:00</pubDate>
+    <pubDate>2011-04-12T09:48:38-07:00</pubDate>
     <copyright>Copyright 2009</copyright>
     <creativeCommons:license>http://creativecommons.org/licenses/by-nc-sa/3.0/</creativeCommons:license>
     <ttl>60</ttl>
     <description>Endlessly expanding technology</description>
+    
+    <item>
+      <title>Serving Static Content Via POST From Nginx</title>
+      <link>http://invalidlogic.com/2011/04/12/serving-static-content-via-post-from-nginx/</link>
+      <pubDate>Tue Apr 12 00:00:00 -0700 2011</pubDate>
+      <guid>http://invalidlogic.com/archives/2011/04/12/serving-static-content-via-post-from-nginx/</guid>
+      <description>&lt;p&gt;Recently, a change was made on Facebook's end where their &amp;lt;fb:iframe&gt; FBML tag started doing POST request to get content.  Their documentation seemed to indicate their &quot;Post for Canvas&quot; change wouldn't affect the &amp;lt;fb:iframe&gt; tag, however our error logs spoke quite to the contrary.  We saw an influx in errors in places where we used &amp;lt;fb:iframe&gt; to pull in static content.  Nginx would simply return a 405 error for &quot;Method Not Allowed&quot;.  Nginx can't serve static content on a POST request.&lt;/p&gt;
+
+&lt;p&gt;Some quick googling seems to reveal some quick answers, but the problem is none of them worked.&lt;/p&gt;
+
+&lt;p&gt;The most popular, &lt;a href=&quot;http://forum.nginx.org/read.php?2,2414,47301&quot;&gt;this thread&lt;/a&gt;, talks about a work around by manipulating the error page for nginx.  First, there is some mixed syntax depending on the nginx version.  Some references seem to be to old 2007 syntax which doesn't work on the nginx 0.7 build we use.  But they all indicated that this &lt;em&gt;should&lt;/em&gt; have worked:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;nginx&quot;&gt;&lt;span class=&quot;k&quot;&gt;error_page&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;405&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@405&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@405&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+
+&lt;p&gt;This basically tells nginx to change the response code to 200 for 405 messages, and to use the @405 location entry to handle it.  Setting the root it is supposed to pull the requested document.  It didn't work though.  At best, I got it to return a 200 code, but no response body.  Essentially, it was still doing a POST request and it still didn't like it.&lt;/p&gt;
+
+&lt;p&gt;I could however, get it to be served by proxying it to our Rails application, if I enabled serving static content from Rails.  But that was less than ideal.&lt;/p&gt;
+
+&lt;p&gt;But then, I was scanning through nginx's &lt;a href=&quot;http://wiki.nginx.org/HttpProxyModule&quot;&gt;proxy documentation&lt;/a&gt; and found what seemed like an ideal solution.  I could configure nginx to serve static content on another port, have the main server proxy it to the other port, and when proxying, change it into a GET request:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;nginx&quot;&gt;&lt;span class=&quot;k&quot;&gt;upstream&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;static_backend&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;localhost&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;89&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;...&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;error_page&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;405&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@405&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;@405&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;proxy_method&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;GET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;proxy_pass&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://static_backend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# POST STATIC CONTENT&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;89&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;server_name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+
+
+</description>
+      <creativeCommons:license>http://creativecommons.org/licenses/by-nc-sa/3.0/</creativeCommons:license>
+    </item>
     
     <item>
       <title>Our pain points with EC2 and how our moved solved them</title>
@@ -475,34 +529,6 @@ control than ever, and did it all while actually saving money.&lt;/p&gt;
 
 
 &lt;p&gt;There are of course many more things you can do with zsh.  I have this and other tidbits in my &lt;a href=&quot;http://github.com/krobertson/dotfiles&quot;&gt;dotfiles repo&lt;/a&gt; on Github.  And now that I think of it, have some stuff I haven't checked in since I'm not in TextMate/Ruby/zsh all day.&lt;/p&gt;
-</description>
-      <creativeCommons:license>http://creativecommons.org/licenses/by-nc-sa/3.0/</creativeCommons:license>
-    </item>
-    
-    <item>
-      <title>The Future of Papercut</title>
-      <link>http://invalidlogic.com/2010/09/08/the-future-of-papercut/</link>
-      <pubDate>Wed Sep 08 00:00:00 -0700 2010</pubDate>
-      <guid>http://invalidlogic.com/archives/2010/09/08/the-future-of-papercut/</guid>
-      <description>&lt;p&gt;It has been three months since I moved to doing Ruby full time, and it has been three months since I've written any .NET.  This is a trend that will likely continue as I'm no longer writing .NET day to day.  However, I don't want one of my babies, &lt;a href=&quot;http://papercut.codeplex.com/&quot;&gt;Papercut&lt;/a&gt;, to die a neglectful death.&lt;/p&gt;
-
-&lt;p&gt;Papercut isn't really a large codebase and doesn't have a laundry list of problems or anything, but it does have a list of feature requests that I know I won't have the time to get to.  So I am looking for someone to take over maintenance of it.&lt;/p&gt;
-
-&lt;p&gt;With open source, it is easy enough for anyone to fork the code and run with it, but people still tend to be drawn to the official codebase and site for the latest updates.  The problem with looking for people to take over is that you can't necessarily hand it off to just anyone.  In many ways, it is like applying for a job.  You can't just say &quot;ohh, I'll do it!&quot; since the bigger question is are you capable of doing it.&lt;/p&gt;
-
-&lt;p&gt;The ideal person would be someone who:&lt;/p&gt;
-
-&lt;ul&gt;
-    &lt;li&gt;Has experience with .NET socket development.&lt;/li&gt;
-    &lt;li&gt;Understands the SMTP protocol, or can read and make sense of protocol RFCs.&lt;/li&gt;
-    &lt;li&gt;Understands MIME format enough to work with it.&lt;/li&gt;
-    &lt;li&gt;Be good to have a basic understanding of asynchronous IO and threading/managed thread pools.&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;This isn't an absolute list, but more of a wish list or a list of what you should expect.  Most of the feature requests for Papercut involve extending it to support more MIME functionality and bugs will often require troubleshooting the networking code or threading, which can be very different than traditional web or GUI apps.&lt;/p&gt;
-
-&lt;p&gt;Anyone who is interested, please email me at ken@invalidlogic.com.&lt;/p&gt;
 </description>
       <creativeCommons:license>http://creativecommons.org/licenses/by-nc-sa/3.0/</creativeCommons:license>
     </item>
