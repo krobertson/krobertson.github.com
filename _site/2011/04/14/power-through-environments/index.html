@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <head profile="http://gmpg.org/xfn/11">
+    <title>Power through environments &mdash; In Valid Logic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Endlessly expanding technology" />
+    <meta name="author" content="Ken Robertson" />
+    <meta name="generator" content="jekyll" />
+
+    <link href="/css/site.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="/css/pygments/trac.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <link href="/atom.xml" rel="alternate" title="Ken Robertson's Atom Feed" type="application/atom+xml" />
+    <link href="/rss.xml" rel="alternate" title="Ken Robertson's RSS Feed" type="application/rss+xml" />
+
+    <link rel='index' title='In Valid Logic' href='http://invalidlogic.com/' />
+  </head>
+
+<body>
+  <div id="container" class="group">
+
+    <h1><a href="http://invalidlogic.com">In Valid Logic</a></h1>
+    <div id="bubble"><p>Endlessly expanding technology</p></div>
+
+    <div id="content" class="group">
+      <h2>Power through environments</h2>
+
+<div class="main">
+  <p>At Involver, we have a pretty rich deployment environment that I think isn't very common.  It is normal to hear about places having a separate staging environment from the production environment, and sometimes having a staging and test environment.  We actually go a step further and have a total of 8 non-production environments.  They all serve different purposes, but are all heavily used.</p>
+
+<p>Our environments are broken up like this:</p>
+
+<ul><li>Production: duh, live stuff</li>
+<li>Staging: Used for QA, close to production, no experimental stuff, pretty good data set and history in the DB.</li>
+<li>Demo: Used for client-facing stuff that is under development.  Somewhat experimental, but expected to not be breaking or of a major impact.</li>
+<li>Perf: This environment is regularly repurposed and is used for benchmarking, testing infrastructure changes, and other large scale changes (Rails upgrades, DB upgrades, core app perf testing).</li>
+<li>Test1-5: These guys are pretty special.</li></ul>
+
+
+<p>The test environments are something special and are meant to be highly flexible.  They are used to deploy separate git branches to an environment that has all the different elements of our application fully orchestrated.  They are useful for testing volatile code, experimental code, or for performing QA on features or feature branches before the code gets merged into master.</p>
+
+<p>The deployment to these environments works by specifying the branch on deploy, and it will create the MySQL/Mongo databases, setup the DB schema, bootstrap the DB with some initial data, and then configure all the configuration files and even config files for other applications that it interacts with.  Each branch on each environment gets its own database.  And between deploys, the data for your branch is fully preserved.</p>
+
+<p>So say you deploy "dev-fix-booboo" to test3 for the first time.  It sets you up with a fresh dataset and are good to go.  You do your thing, then later on, someone deploys another branch.  They get their own DB, not mucking up the stuff you previously had done, and when you deploy there again, you are right back where you left off.</p>
+
+<p>Since they are specific to the environment too, we often times assign a long-running feature branch to an environment, so that the data used by QA sticks around more, and smaller test branches can use them here and there.</p>
+
+<p>The full power of these comes form:</p>
+
+<ol><li>Flexibility.  I have a branch I want to deploy, but not much other environments.  Sweet.</li>
+<li>Some element of persistence.  I can use it for a few days, come back, and be right where I left off.  No risk of someone polluting my stuff with bad data.</li>
+<li>QA can actually deploy to them and pick which is available.  For non-feature branch testing, this gives them great flexibility.</li></ol>
+
+
+<p>Of course, there are still some pitfalls:</p>
+
+<ol><li>They don't mirror the full production setup.  They're usually one box and not spec'd for any kind of load.  They run good, but not going to handle lots of people.  Can't perf test here.</li>
+<li>There is the data persistence between switching branches, but often no rich DB history.  It is harder to test large datasets of legacy type setups.</li>
+<li>Can't test infrastructure changes.  If deploys don't switch out gems or system configs, so harder if you want to test a change like that, you need to lock the environment til done.</li></ol>
+
+
+<p>All of this makes for a very flexible deployment process.  It allows devs to easily get code off of their machines and in a more controlled environment.  It allows us to have high confidence in code before it makes it to master and often even before the feature branch.  It also allows QA to do their testing without potentially deploying code they reject to staging or demo, where it might be customer facing or impact other development.</p>
+
+<p>Big props for it go to <a href="http://twitter.com/mikewadhera">@mikewadhera</a>, who initially wrote the deployment process for it.  Since then, we (infra/ops team) have worked on making the environments single-system, which allow us to have more of them, as well as iterate on making them more streamlined with developer and QA feedback.</p>
+
+<p>This kind of builds up to something I'll be talking about soon too.  Since we have a total of 9 different environments, this can lead to a very interesting chef workflow.</p>
+
+</div>
+
+<div class="meta group">
+  <div class="signature">
+    <p>Thursday, April 14, 2011</p>
+  </div>	
+  <div class="tags">
+    &nbsp;
+  </div>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'invalidlogic'; // required: replace example with your forum shortname
+
+    // The following are highly recommended additional parameters. Remove the slashes in front to use.
+    // var disqus_identifier = 'unique_dynamic_id_1234';
+    // var disqus_url = 'http://example.com/permalink-to-page.html';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+<div class="paginator">
+  
+    <div class="previous">&larr; <a class="previous" href="/2011/04/12/serving-static-content-via-post-from-nginx/" title="Previous post: Serving Static Content Via POST From Nginx">Serving Static Content Via POST From Nginx</a></div>
+  
+  
+  
+</div>
+    </div>
+
+    <div id="sidebar">
+      <h3>About</h3>
+      <div class="textwidget">
+        This is the personal blog of Ken Robertson.  I'm a developer at <a href="http://involver.com/">Involver</a> working in Ruby/Rails.  In a former life, I worked in .NET for many years and since moved on.<br/>
+        <br/>
+        Now, I get to make Rails scale, cook all day long with chef, and experiment with building highly concurrent systems.<br/>
+        <br/>
+        In my spare time, I like to build things.  I like to experiment with different technologies to find how they best fit onto my utility belt.<br/>
+        <br/>
+        I sometimes blog.  You'll find those things here.<br/>
+        <br/>
+        I sometimes code.  You'll find those on <a href="http://github.com/krobertson">Github</a>.<br/>
+      </div>
+
+      <h3>Search</h3>
+      <form method="get" action="http://www.google.com/search">
+        <div>
+          <label class="screen-reader-text" for="s">Search for:</label>
+          <input type="text" id="s" name="q" value="" />
+          <input type="hidden" name="q" value="site:invalidlogic.com" />
+          <input type="submit" id="searchsubmit" value="Search" />
+        </div>
+      </form>
+
+      <h3>Recent Posts</h3>
+      <ul>
+        
+          <li><a href="/2011/04/14/power-through-environments/">Power through environments</a></li>
+        
+          <li><a href="/2011/04/12/serving-static-content-via-post-from-nginx/">Serving Static Content Via POST From Nginx</a></li>
+        
+          <li><a href="/2011/02/16/our-pain-points-with-ec2/">Our pain points with EC2 and how our moved solved them</a></li>
+        
+          <li><a href="/2011/02/11/how-we-did-a-datacenter-migration-with-no-downtime/">How we did a datacenter migration with no downtime</a></li>
+        
+          <li><a href="/2011/02/07/how-a-deprecated-method-can-take-down-a-process/">How a deprecated method can take down a process</a></li>
+        
+    	</ul>
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <p>The Journalist template by <a href="http://lucianmarin.com/" rel="designer">Lucian E. Marin</a></p>
+  </div>
+</body>
+</html>

@@ -24,6 +24,59 @@
 
     <div id="content" class="group">
       
+  <h2><a href="/2011/04/14/power-through-environments/">Power through environments</a></h2>
+
+  <div class="main">
+    <p>At Involver, we have a pretty rich deployment environment that I think isn't very common.  It is normal to hear about places having a separate staging environment from the production environment, and sometimes having a staging and test environment.  We actually go a step further and have a total of 8 non-production environments.  They all serve different purposes, but are all heavily used.</p>
+
+<p>Our environments are broken up like this:</p>
+
+<ul><li>Production: duh, live stuff</li>
+<li>Staging: Used for QA, close to production, no experimental stuff, pretty good data set and history in the DB.</li>
+<li>Demo: Used for client-facing stuff that is under development.  Somewhat experimental, but expected to not be breaking or of a major impact.</li>
+<li>Perf: This environment is regularly repurposed and is used for benchmarking, testing infrastructure changes, and other large scale changes (Rails upgrades, DB upgrades, core app perf testing).</li>
+<li>Test1-5: These guys are pretty special.</li></ul>
+
+
+<p>The test environments are something special and are meant to be highly flexible.  They are used to deploy separate git branches to an environment that has all the different elements of our application fully orchestrated.  They are useful for testing volatile code, experimental code, or for performing QA on features or feature branches before the code gets merged into master.</p>
+
+<p>The deployment to these environments works by specifying the branch on deploy, and it will create the MySQL/Mongo databases, setup the DB schema, bootstrap the DB with some initial data, and then configure all the configuration files and even config files for other applications that it interacts with.  Each branch on each environment gets its own database.  And between deploys, the data for your branch is fully preserved.</p>
+
+<p>So say you deploy "dev-fix-booboo" to test3 for the first time.  It sets you up with a fresh dataset and are good to go.  You do your thing, then later on, someone deploys another branch.  They get their own DB, not mucking up the stuff you previously had done, and when you deploy there again, you are right back where you left off.</p>
+
+<p>Since they are specific to the environment too, we often times assign a long-running feature branch to an environment, so that the data used by QA sticks around more, and smaller test branches can use them here and there.</p>
+
+<p>The full power of these comes form:</p>
+
+<ol><li>Flexibility.  I have a branch I want to deploy, but not much other environments.  Sweet.</li>
+<li>Some element of persistence.  I can use it for a few days, come back, and be right where I left off.  No risk of someone polluting my stuff with bad data.</li>
+<li>QA can actually deploy to them and pick which is available.  For non-feature branch testing, this gives them great flexibility.</li></ol>
+
+
+<p>Of course, there are still some pitfalls:</p>
+
+<ol><li>They don't mirror the full production setup.  They're usually one box and not spec'd for any kind of load.  They run good, but not going to handle lots of people.  Can't perf test here.</li>
+<li>There is the data persistence between switching branches, but often no rich DB history.  It is harder to test large datasets of legacy type setups.</li>
+<li>Can't test infrastructure changes.  If deploys don't switch out gems or system configs, so harder if you want to test a change like that, you need to lock the environment til done.</li></ol>
+
+
+<p>All of this makes for a very flexible deployment process.  It allows devs to easily get code off of their machines and in a more controlled environment.  It allows us to have high confidence in code before it makes it to master and often even before the feature branch.  It also allows QA to do their testing without potentially deploying code they reject to staging or demo, where it might be customer facing or impact other development.</p>
+
+<p>Big props for it go to <a href="http://twitter.com/mikewadhera">@mikewadhera</a>, who initially wrote the deployment process for it.  Since then, we (infra/ops team) have worked on making the environments single-system, which allow us to have more of them, as well as iterate on making them more streamlined with developer and QA feedback.</p>
+
+<p>This kind of builds up to something I'll be talking about soon too.  Since we have a total of 9 different environments, this can lead to a very interesting chef workflow.</p>
+
+  </div>
+
+  <div class="meta group">
+    <div class="signature">
+      <p>Thursday, April 14, 2011</p>
+    </div>	
+    <div class="tags">
+      &nbsp;
+    </div>
+  </div>
+
   <h2><a href="/2011/04/12/serving-static-content-via-post-from-nginx/">Serving Static Content Via POST From Nginx</a></h2>
 
   <div class="main">
@@ -502,38 +555,6 @@ control than ever, and did it all while actually saving money.</p>
     </div>
   </div>
 
-  <h2><a href="/2010/10/14/tool-enlightenment/">Tool Enlightenment</a></h2>
-
-  <div class="main">
-    <p>Recently, I decided to take a journey down the path of enlightenment.</p>
-
-<p>One of the things I found so refreshing about Ruby/Rails when I first started using it was the simplicity of the tooling.  Just use a text editor, no monolithic IDE with large memory footprints, slow load times, and a panache for crashing.</p>
-
-<p>Visual Studio certainly is a great tool, and provides some powerful tools to .NET.  But I doubt anyone would disagree with me that Visual Studio often feels like a 500lb gorilla. Especially when you add in the plugins so many use, like CodeRush or ReSharper.  Simply opening TextMate was rather refreshing when coming from that kind of environment.</p>
-
-<p>A few weeks ago, I had the chance to go to <a href="http://gogaruco.com">GoGaRuCo</a> and they had a workflow panel where they got some of the well known developers up on the stage, and discussed some of the tools and arrangements they use.  It was a little superficial, where it was "I have an editor with 3 panes and 2 terminals open".  But there were some interesting observations.  First of all, everyone on the panel was using either Emacs or Vim.  After the talk, they polled the audience what they use.  The overwhelming majority of the audience was using either RubyMine or TextMate.</p>
-
-<p>The surface argument you could make is that all the "hackers" are using Emacs/Vim and aren't representative of the population.  Sure, I looked at it that way too.  But a few things started to peak my interest, particularly when I'd talk to an Emacs or Vim user.  You will almost always hear them say they've been using it for 10 years, 15 years, or sometimes even longer.</p>
-
-<p>Think about your toolset today and your toolset 10 years ago.  Is there <i>anything</i> that you're still using?  If so many people will stick with the same tool for 10 years, spanning technology bubbles, and crossing over to new languages, there must be something that tool is doing right.  These are tools whose users invest in them.  They're like marriages.</p>
-
-<p>So my journey to enlightenment has begun with looking at Emacs, however I'm not just playing eenie-meenie-miney-moe. Both Emacs and Vim have large followings are both excellent choices. The way I see it, I can't chose which direction to go without looking both ways.  So, I'm trying both for 1-2 weeks each, play around with building my .emacs and vimrc, and see where it leads.</p>
-
-<p>I've been using Emacs for almost 2 weeks now, and find myself opening stuff up in TextMate less and less.  Next week, I plan to focus more on Vim and try it out.</p>
-
-<p>But I think the true enlightenment that can be found is... the elite tools are not what the "hacker" portion of a community use.  Use what fits your style best, understand why you've chosen your tools, and recognize those same decisions in the tools used by those around you.</p>
-
-  </div>
-
-  <div class="meta group">
-    <div class="signature">
-      <p>Thursday, October 14, 2010</p>
-    </div>	
-    <div class="tags">
-      &nbsp;
-    </div>
-  </div>
-
 
     </div>
 
@@ -564,6 +585,8 @@ control than ever, and did it all while actually saving money.</p>
       <h3>Recent Posts</h3>
       <ul>
         
+          <li><a href="/2011/04/14/power-through-environments/">Power through environments</a></li>
+        
           <li><a href="/2011/04/12/serving-static-content-via-post-from-nginx/">Serving Static Content Via POST From Nginx</a></li>
         
           <li><a href="/2011/02/16/our-pain-points-with-ec2/">Our pain points with EC2 and how our moved solved them</a></li>
@@ -571,8 +594,6 @@ control than ever, and did it all while actually saving money.</p>
           <li><a href="/2011/02/11/how-we-did-a-datacenter-migration-with-no-downtime/">How we did a datacenter migration with no downtime</a></li>
         
           <li><a href="/2011/02/07/how-a-deprecated-method-can-take-down-a-process/">How a deprecated method can take down a process</a></li>
-        
-          <li><a href="/2011/01/19/love-your-dependency-management/">Love your dependency management</a></li>
         
     	</ul>
     </div>

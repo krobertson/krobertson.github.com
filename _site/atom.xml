@@ -5,13 +5,60 @@
  <link href="http://invalidlogic.com/atom.xml" rel="self"/>
  <link href="http://invalidlogic.com"/>
  <link rel="license" type="/application/rdf+xml" href="http://creativecommons.org/licenses/by-nc-sa/3.0/rdf" />
- <updated>2011-04-12T09:48:38-07:00</updated>
+ <updated>2011-04-14T09:54:32-07:00</updated>
  <id>http://invalidlogic.com</id>
  <author>
      <name>Ken Robertson</name>
      <email>ken@invalidlogic.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Power through environments</title>
+   <link href="http://invalidlogic.com//2011/04/14/power-through-environments/"/>
+   <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
+   <updated>2011-04-14T00:00:00-07:00</updated>
+   <id>http://invalidlogic.com//2011/04/14/power-through-environments</id>
+   <content type="html">&lt;p&gt;At Involver, we have a pretty rich deployment environment that I think isn't very common.  It is normal to hear about places having a separate staging environment from the production environment, and sometimes having a staging and test environment.  We actually go a step further and have a total of 8 non-production environments.  They all serve different purposes, but are all heavily used.&lt;/p&gt;
+
+&lt;p&gt;Our environments are broken up like this:&lt;/p&gt;
+
+&lt;ul&gt;&lt;li&gt;Production: duh, live stuff&lt;/li&gt;
+&lt;li&gt;Staging: Used for QA, close to production, no experimental stuff, pretty good data set and history in the DB.&lt;/li&gt;
+&lt;li&gt;Demo: Used for client-facing stuff that is under development.  Somewhat experimental, but expected to not be breaking or of a major impact.&lt;/li&gt;
+&lt;li&gt;Perf: This environment is regularly repurposed and is used for benchmarking, testing infrastructure changes, and other large scale changes (Rails upgrades, DB upgrades, core app perf testing).&lt;/li&gt;
+&lt;li&gt;Test1-5: These guys are pretty special.&lt;/li&gt;&lt;/ul&gt;
+
+
+&lt;p&gt;The test environments are something special and are meant to be highly flexible.  They are used to deploy separate git branches to an environment that has all the different elements of our application fully orchestrated.  They are useful for testing volatile code, experimental code, or for performing QA on features or feature branches before the code gets merged into master.&lt;/p&gt;
+
+&lt;p&gt;The deployment to these environments works by specifying the branch on deploy, and it will create the MySQL/Mongo databases, setup the DB schema, bootstrap the DB with some initial data, and then configure all the configuration files and even config files for other applications that it interacts with.  Each branch on each environment gets its own database.  And between deploys, the data for your branch is fully preserved.&lt;/p&gt;
+
+&lt;p&gt;So say you deploy &quot;dev-fix-booboo&quot; to test3 for the first time.  It sets you up with a fresh dataset and are good to go.  You do your thing, then later on, someone deploys another branch.  They get their own DB, not mucking up the stuff you previously had done, and when you deploy there again, you are right back where you left off.&lt;/p&gt;
+
+&lt;p&gt;Since they are specific to the environment too, we often times assign a long-running feature branch to an environment, so that the data used by QA sticks around more, and smaller test branches can use them here and there.&lt;/p&gt;
+
+&lt;p&gt;The full power of these comes form:&lt;/p&gt;
+
+&lt;ol&gt;&lt;li&gt;Flexibility.  I have a branch I want to deploy, but not much other environments.  Sweet.&lt;/li&gt;
+&lt;li&gt;Some element of persistence.  I can use it for a few days, come back, and be right where I left off.  No risk of someone polluting my stuff with bad data.&lt;/li&gt;
+&lt;li&gt;QA can actually deploy to them and pick which is available.  For non-feature branch testing, this gives them great flexibility.&lt;/li&gt;&lt;/ol&gt;
+
+
+&lt;p&gt;Of course, there are still some pitfalls:&lt;/p&gt;
+
+&lt;ol&gt;&lt;li&gt;They don't mirror the full production setup.  They're usually one box and not spec'd for any kind of load.  They run good, but not going to handle lots of people.  Can't perf test here.&lt;/li&gt;
+&lt;li&gt;There is the data persistence between switching branches, but often no rich DB history.  It is harder to test large datasets of legacy type setups.&lt;/li&gt;
+&lt;li&gt;Can't test infrastructure changes.  If deploys don't switch out gems or system configs, so harder if you want to test a change like that, you need to lock the environment til done.&lt;/li&gt;&lt;/ol&gt;
+
+
+&lt;p&gt;All of this makes for a very flexible deployment process.  It allows devs to easily get code off of their machines and in a more controlled environment.  It allows us to have high confidence in code before it makes it to master and often even before the feature branch.  It also allows QA to do their testing without potentially deploying code they reject to staging or demo, where it might be customer facing or impact other development.&lt;/p&gt;
+
+&lt;p&gt;Big props for it go to &lt;a href=&quot;http://twitter.com/mikewadhera&quot;&gt;@mikewadhera&lt;/a&gt;, who initially wrote the deployment process for it.  Since then, we (infra/ops team) have worked on making the environments single-system, which allow us to have more of them, as well as iterate on making them more streamlined with developer and QA feedback.&lt;/p&gt;
+
+&lt;p&gt;This kind of builds up to something I'll be talking about soon too.  Since we have a total of 9 different environments, this can lead to a very interesting chef workflow.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Serving Static Content Via POST From Nginx</title>
@@ -642,50 +689,6 @@ Location: 10911 White Rock Road, Rancho Cordova, CA 95670  (see details for numb
 
 
 
-</content>
- </entry>
- 
- <entry>
-   <title>Tracing controller filters in New Relic</title>
-   <link href="http://invalidlogic.com//2010/06/18/tracing-controller-filters-in-new-relic/"/>
-   <link rel="license" type="text/html" href="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
-   <updated>2010-06-18T00:00:00-07:00</updated>
-   <id>http://invalidlogic.com//2010/06/18/tracing-controller-filters-in-new-relic</id>
-   <content type="html">&lt;p&gt;Yet another New Relic goodie today.&lt;/p&gt;
-
-&lt;p&gt;One thing I was kind of surprised that New Relic didn't already have instrumentation around out of the box was controller filters.  We had noticed some occasional gaps after the main processing of an action, where all the templates would be rendered, but the execution still went on for a few hundred milliseconds (or sometimes more).  Finally, it dawned that it is probably one of the after_filters.&lt;/p&gt;
-
-&lt;p&gt;So we aded tracing around filter execution, and lo and behold, we had one that from time to time would misbehave and execute slow.&lt;/p&gt;
-
-&lt;p&gt;To instrument the filters, the simplest way seemed to be by tacking on to the 'call' method of each filter type.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;lineno&quot;&gt; 1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ActionController&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Filters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;BeforeFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class_eval&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 2&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;add_method_tracer&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Custom/BeforeFilter/#{method.to_s}&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 3&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 4&lt;/span&gt; 
-&lt;span class=&quot;lineno&quot;&gt; 5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ActionController&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Filters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;AfterFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class_eval&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 6&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;add_method_tracer&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Custom/AfterFilter/#{method.to_s}&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 7&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 8&lt;/span&gt; 
-&lt;span class=&quot;lineno&quot;&gt; 9&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ActionController&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Filters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;AroundFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class_eval&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;10&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;add_method_tracer&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Custom/AroundFilter/#{method.to_s}&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;11&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-
-&lt;p&gt;And one more goodie while I'm looking at my list of New Relic tracers... ActionMailer.  Have seen this time and time again, that sending email synchronously with the HTTP request can drastically slow down performance.  SMTP server can be slow, can be mailing a number of recipients, submission fails, etc.  For us, most email delivery is asynchronous in the background, but one or two are triggered in line.&lt;/p&gt;
-
-&lt;p&gt;To trace ActionMailer delivery:&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;lineno&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ActionMailer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class_eval&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;2&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;add_method_tracer&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:deliver!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Custom/ActionMailer/deliver!&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-
-&lt;p&gt;Will maybe sometime look at email processing more, but email templates are often far simpler and their action methods do less loading.&lt;/p&gt;
 </content>
  </entry>
  
