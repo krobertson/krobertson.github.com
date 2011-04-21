@@ -3,7 +3,7 @@ layout: post
 title: Our pain points with EC2 and how our moved solved them
 ---
 
-As I mentioned in my last post, we made the move off of EC2 in December to our own cluster of machines.
+As I [mentioned in my last post](http://invalidlogic.com/2011/02/11/how-we-did-a-datacenter-migration-with-no-downtime/), we made the move off of EC2 in December to our own cluster of machines.
 
 While EC2 had served us very well and helped get our systems to the
 place they are today, we started reaching a point where we were
