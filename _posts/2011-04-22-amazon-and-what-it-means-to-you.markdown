@@ -3,7 +3,7 @@ layout: post
 title: Amazon and what it means to you
 ---
 
-Unless you were under a rock, you probably heard about the major issues in Amazon's US-East region yesterday.  Needless to say, a lot businesses had a rough day yesterday.
+Unless you were under a rock, you probably heard about the major issues in Amazon's US-East region yesterday.  Needless to say, a lot of businesses had a rough day yesterday.
 
 One of the most interesting aspects of yesterday was realizing how big Amazon's reach is.  Numerous well known startups and businesses were down, but beyond that, services not even on Amazon themselves were affected.  We [moved off EC2](http://invalidlogic.com/2011/02/11/how-we-did-a-datacenter-migration-with-no-downtime/) back in December, however we integrate with APIs from several other services, including some that are running on EC2.  We still felt the impact and were closely watching Amazon tracking status.
 
