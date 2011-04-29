@@ -1,3 +1,2 @@
 .bundle
-_site/Gemfile*
-_site/config.ru
+_site
