@@ -615,7 +615,6 @@ ul.archive li div.archive-link a {
     border: none;
     color: {{ page.hlinks }};  
 }
-ul.archive li div.archive-link a:hover {
-    background-color: {{ page.hlinks }};    
-    color: #fff;
+.paginator {
+  margin-bottom: 15px;
 }
